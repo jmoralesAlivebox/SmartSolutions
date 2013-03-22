@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * The TreePanel provides tree-structured UI representation of tree-structured data.
  * A TreePanel must be bound to a {@link Ext.data.TreeStore}. TreePanel's support
@@ -30,7 +13,7 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  *                 { text: "detention", leaf: true },
  *                 { text: "homework", expanded: true, children: [
  *                     { text: "book report", leaf: true },
- *                     { text: "algebra", leaf: true}
+ *                     { text: "alegrbra", leaf: true}
  *                 ] },
  *                 { text: "buy lottery tickets", leaf: true }
  *             ]
@@ -149,11 +132,6 @@ Ext.define('Ext.tree.Panel', {
      * @cfg {Ext.data.TreeStore} store (required)
      * The {@link Ext.data.TreeStore Store} the tree should use as its data source.
      */
-    
-    arrowCls: Ext.baseCSSPrefix + 'tree-arrows',
-    linesCls: Ext.baseCSSPrefix + 'tree-lines',
-    noLinesCls: Ext.baseCSSPrefix + 'tree-no-lines',
-    autoWidthCls: Ext.baseCSSPrefix + 'autowidth-table',
 
     constructor: function(config) {
         config = config || {};
@@ -169,35 +147,34 @@ Ext.define('Ext.tree.Panel', {
     initComponent: function() {
         var me = this,
             cls = [me.treeCls],
-            store = me.store,
             view;
 
         if (me.useArrows) {
-            cls.push(me.arrowCls);
+            cls.push(Ext.baseCSSPrefix + 'tree-arrows');
             me.lines = false;
         }
 
         if (me.lines) {
-            cls.push(me.linesCls);
+            cls.push(Ext.baseCSSPrefix + 'tree-lines');
         } else if (!me.useArrows) {
-            cls.push(me.noLinesCls);
+            cls.push(Ext.baseCSSPrefix + 'tree-no-lines');
         }
 
-        if (Ext.isString(store)) {
-            store = me.store = Ext.StoreMgr.lookup(store);
-        } else if (!store || Ext.isObject(store) && !store.isStore) {
-            store = me.store = new Ext.data.TreeStore(Ext.apply({
+        if (Ext.isString(me.store)) {
+            me.store = Ext.StoreMgr.lookup(me.store);
+        } else if (!me.store || Ext.isObject(me.store) && !me.store.isStore) {
+            me.store = new Ext.data.TreeStore(Ext.apply({}, me.store || {}, {
                 root: me.root,
                 fields: me.fields,
                 model: me.model,
                 folderSort: me.folderSort
-            }, store));
+            }));
         } else if (me.root) {
-            store = me.store = Ext.data.StoreManager.lookup(store);
-            store.setRootNode(me.root);
+            me.store = Ext.data.StoreManager.lookup(me.store);
+            me.store.setRootNode(me.root);
             if (me.folderSort !== undefined) {
-                store.folderSort = me.folderSort;
-                store.sort();
+                me.store.folderSort = me.folderSort;
+                me.store.sort();
             }
         }
 
@@ -206,94 +183,22 @@ Ext.define('Ext.tree.Panel', {
         //     me.rootVisible = false;
         // }
 
-        me.viewConfig = Ext.apply({
+        me.viewConfig = Ext.apply({}, me.viewConfig);
+        me.viewConfig = Ext.applyIf(me.viewConfig, {
             rootVisible: me.rootVisible,
             animate: me.enableAnimations,
             singleExpand: me.singleExpand,
-            node: store.getRootNode(),
+            node: me.store.getRootNode(),
             hideHeaders: me.hideHeaders
-        }, me.viewConfig);
-
-        // If the user specifies the headers collection manually then dont inject our own
-        if (!me.columns) {
-            if (me.initialConfig.hideHeaders === undefined) {
-                me.hideHeaders = true;
-            }
-            me.addCls(me.autoWidthCls);
-            me.columns = [{
-                xtype    : 'treecolumn',
-                text     : 'Name',
-                width    : Ext.isIE6 ? '100%' : 10000, // IE6 needs width:100%
-                dataIndex: me.displayField         
-            }];
-        }
-
-        if (me.cls) {
-            cls.push(me.cls);
-        }
-        me.cls = cls.join(' ');
-
-        me.callParent();
-
-        // TreeModel has to know about the TreeStore so that pruneRemoved can work properly upon removal
-        // of nodes.
-        me.selModel.treeStore = me.store;
-
-        view = me.getView();
-
-        // Relay events from the TreeView.
-        // An injected LockingView relays events from its locked side's View
-        me.relayEvents(view, [
-            /**
-            * @event checkchange
-            * Fires when a node with a checkbox's checked property changes
-            * @param {Ext.data.NodeInterface} node The node who's checked property was changed
-            * @param {Boolean} checked The node's new checked state
-            */
-            'checkchange',
-            /**
-            * @event afteritemexpand
-            * @inheritdoc Ext.tree.View#afteritemexpand
-            */
-            'afteritemexpand',
-            /**
-            * @event afteritemcollapse
-            * @inheritdoc Ext.tree.View#afteritemcollapse
-            */
-            'afteritemcollapse'
-        ]);
-
-        // If there has been a LockingView injected, this processing will be performed by the locked TreePanel
-        if (!view.isLockingView) {
-            // If the root is not visible and there is no rootnode defined, then just lets load the store
-            if (!view.rootVisible && !me.getRootNode()) {
-                me.setRootNode({
-                    expanded: true
-                });
-            }
-        }
-    },
-
-    // @private
-    // Hook into the TreeStore.
-    // Do not callParent in TreePanel's bindStore
-    // The TreeStore is only relevant to the tree - the View has its own NodeStore
-    bindStore: function(store) {
-        var me = this;
-
-        me.store = store;
-
-        // Connect to store. Return a Destroyable object
-        me.storeListeners = me.mon(store, {
-            destroyable: true,
-            load: me.onStoreLoad,
-            rootchange: me.onRootChange,
-            clear: me.onClear,
-            scope: me
         });
 
-        // Relay store events. relayEvents always returns a Destroyable object.
-        me.storeRelayers = me.relayEvents(store, [
+        me.mon(me.store, {
+            scope: me,
+            rootchange: me.onRootChange,
+            clear: me.onClear
+        });
+
+        me.relayEvents(me.store, [
             /**
              * @event beforeload
              * @inheritdoc Ext.data.TreeStore#beforeload
@@ -307,10 +212,7 @@ Ext.define('Ext.tree.Panel', {
             'load'
         ]);
 
-        // Relay store events with prefix. Return a Destroyable object
-        me.storeRelayers1 = me.mon(store, {
-            destroyable: true,
-
+        me.mon(me.store, {
             /**
              * @event itemappend
              * @inheritdoc Ext.data.TreeStore#append
@@ -384,22 +286,56 @@ Ext.define('Ext.tree.Panel', {
             beforecollapse: me.createRelayer('beforeitemcollapse', [0, 1])
         });
 
-        // TreeStore must have an upward link to the TreePanel so that nodes can find their owning tree in NodeInterface.getOwnerTree
-        store.ownerTree = me;
-    },
+        // If the user specifies the headers collection manually then dont inject our own
+        if (!me.columns) {
+            if (me.initialConfig.hideHeaders === undefined) {
+                me.hideHeaders = true;
+            }
+            me.addCls(Ext.baseCSSPrefix + 'autowidth-table');
+            me.columns = [{
+                xtype    : 'treecolumn',
+                text     : 'Name',
+                width    : Ext.isIE6 ? null : 10000,
+                dataIndex: me.displayField         
+            }];
+        }
 
-    // @private
-    // TODO: Decide whether it is possible to reconfigure a TreePanel.
-    unbindStore: function() {
-        var me = this,
-            store = me.store;
+        if (me.cls) {
+            cls.push(me.cls);
+        }
+        me.cls = cls.join(' ');
+        me.callParent();
+        
+        view = me.getView();
 
-        if (store) {
-            Ext.destroy(me.storeListeners, me.storeRelayers, me.storeRelayers1);
-            delete store.ownerTree;
+        me.relayEvents(view, [
+            /**
+             * @event checkchange
+             * Fires when a node with a checkbox's checked property changes
+             * @param {Ext.data.NodeInterface} node The node who's checked property was changed
+             * @param {Boolean} checked The node's new checked state
+             */
+            'checkchange',
+            /**
+             * @event afteritemexpand
+             * @inheritdoc Ext.tree.View#afteritemexpand
+             */
+            'afteritemexpand',
+            /**
+             * @event afteritemcollapse
+             * @inheritdoc Ext.tree.View#afteritemcollapse
+             */
+            'afteritemcollapse'
+        ]);
+
+        // If the root is not visible and there is no rootnode defined, then just lets load the store
+        if (!view.rootVisible && !me.getRootNode()) {
+            me.setRootNode({
+                expanded: true
+            });
         }
     },
-
+    
     onClear: function(){
         this.view.onClear();
     },
@@ -467,14 +403,15 @@ Ext.define('Ext.tree.Panel', {
     expandAll : function(callback, scope) {
         var me = this,
             root = me.getRootNode(),
-            animate = me.enableAnimations;
+            animate = me.enableAnimations,
+            view = me.getView();
         if (root) {
             if (!animate) {
-                Ext.suspendLayouts();
+                view.beginBulkUpdate();
             }
             root.expand(true, callback, scope || me);
             if (!animate) {
-                Ext.resumeLayouts(true);
+                view.endBulkUpdate();
             }
         }
     },
@@ -492,7 +429,7 @@ Ext.define('Ext.tree.Panel', {
 
         if (root) {
             if (!animate) {
-                Ext.suspendLayouts();
+                view.beginBulkUpdate();
             }
             scope = scope || me;
             if (view.rootVisible) {
@@ -501,7 +438,7 @@ Ext.define('Ext.tree.Panel', {
                 root.collapseChildren(true, callback, scope);
             }
             if (!animate) {
-                Ext.resumeLayouts(true);
+                view.endBulkUpdate();
             }
         }
     },

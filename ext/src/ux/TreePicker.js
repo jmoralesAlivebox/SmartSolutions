@@ -1,13 +1,12 @@
 /**
+ * @class Ext.ux.TreePicker
+ * @extends Ext.form.field.Picker
+ * 
  * A Picker field that contains a tree panel on its popup, enabling selection of tree nodes.
  */
 Ext.define('Ext.ux.TreePicker', {
     extend: 'Ext.form.field.Picker',
     xtype: 'treepicker',
-    
-    uses: [
-        'Ext.tree.Panel'
-    ],
 
     triggerCls: Ext.baseCSSPrefix + 'form-arrow-trigger',
 
@@ -56,7 +55,7 @@ Ext.define('Ext.ux.TreePicker', {
         var me = this;
         me.callParent(arguments);
 
-        me.addEvents(
+        this.addEvents(
             /**
              * @event select
              * Fires when a tree node is selected
@@ -66,57 +65,60 @@ Ext.define('Ext.ux.TreePicker', {
             'select'
         );
 
-        me.mon(me.store, {
-            scope: me,
-            load: me.onLoad,
-            update: me.onUpdate
-        });
+        me.store.on('load', me.onLoad, me);
     },
 
     /**
      * Creates and returns the tree panel to be used as this field's picker.
+     * @private
      */
     createPicker: function() {
         var me = this,
-            picker = new Ext.tree.Panel({
-                shrinkWrapDock: 2,
+            picker = Ext.create('Ext.tree.Panel', {
                 store: me.store,
                 floating: true,
+                hidden: true,
                 displayField: me.displayField,
                 columns: me.columns,
-                minHeight: me.minPickerHeight,
-                maxHeight: me.maxPickerHeight,
-                manageHeight: false,
+                maxHeight: me.maxTreeHeight,
                 shadow: false,
+                manageHeight: false,
                 listeners: {
-                    scope: me,
-                    itemclick: me.onItemClick
+                    itemclick: Ext.bind(me.onItemClick, me)
                 },
                 viewConfig: {
                     listeners: {
-                        scope: me,
-                        render: me.onViewRender
+                        render: function(view) {
+                            view.getEl().on('keypress', me.onPickerKeypress, me);
+                        }
                     }
                 }
             }),
             view = picker.getView();
 
+        view.on('render', me.setPickerViewStyles, me);
+
         if (Ext.isIE9 && Ext.isStrict) {
             // In IE9 strict mode, the tree view grows by the height of the horizontal scroll bar when the items are highlighted or unhighlighted.
             // Also when items are collapsed or expanded the height of the view is off. Forcing a repaint fixes the problem.
-            view.on({
-                scope: me,
-                highlightitem: me.repaintPickerView,
-                unhighlightitem: me.repaintPickerView,
-                afteritemexpand: me.repaintPickerView,
-                afteritemcollapse: me.repaintPickerView
-            });
+            view.on('highlightitem', me.repaintPickerView, me);
+            view.on('unhighlightitem', me.repaintPickerView, me);
+            view.on('afteritemexpand', me.repaintPickerView, me);
+            view.on('afteritemcollapse', me.repaintPickerView, me);
         }
         return picker;
     },
-    
-    onViewRender: function(view){
-        view.getEl().on('keypress', this.onPickerKeypress, this);
+
+    /**
+     * Sets min/max height styles on the tree picker's view element after it is rendered.
+     * @param {Ext.tree.View} view
+     * @private
+     */
+    setPickerViewStyles: function(view) {
+        view.getEl().setStyle({
+            'min-height': this.minPickerHeight + 'px',
+            'max-height': this.maxPickerHeight + 'px'
+        });
     },
 
     /**
@@ -131,6 +133,7 @@ Ext.define('Ext.ux.TreePicker', {
 
     /**
      * Aligns the picker to the input element
+     * @private
      */
     alignPicker: function() {
         var me = this,
@@ -182,7 +185,7 @@ Ext.define('Ext.ux.TreePicker', {
      */
     selectItem: function(record) {
         var me = this;
-        me.setValue(record.getId());
+        me.setValue(record.get('id'));
         me.picker.hide();
         me.inputEl.focus();
         me.fireEvent('select', me, record)
@@ -198,19 +201,13 @@ Ext.define('Ext.ux.TreePicker', {
         var me = this,
             picker = me.picker,
             store = picker.store,
-            value = me.value,
-            node;
+            value = me.value;
 
-        
-        if (value) {
-            node = store.getNodeById(value);
+        if(value) {
+            picker.selectPath(store.getNodeById(value).getPath());
+        } else {
+            picker.getSelectionModel().select(store.getRootNode());
         }
-        
-        if (!node) {
-            node = store.getRootNode();
-        }
-        
-        picker.selectPath(node.getPath());
 
         Ext.defer(function() {
             picker.getView().focus();
@@ -235,22 +232,13 @@ Ext.define('Ext.ux.TreePicker', {
             
         // try to find a record in the store that matches the value
         record = value ? me.store.getNodeById(value) : me.store.getRootNode();
-        if (value === undefined) {
-            record = me.store.getRootNode();
-            me.value = record.getId();
-        } else {
-            record = me.store.getNodeById(value);
-        }
 
         // set the raw value to the record's display field if a record was found
-        me.setRawValue(record ? record.get(me.displayField) : '');
+        me.setRawValue(record ? record.get(this.displayField) : '');
 
         return me;
     },
-    
-    getSubmitValue: function(){
-        return this.value;    
-    },
+
 
     /**
      * Returns the current data value of the field (the idProperty of the record)
@@ -269,14 +257,6 @@ Ext.define('Ext.ux.TreePicker', {
 
         if (value) {
             this.setValue(value);
-        }
-    },
-    
-    onUpdate: function(store, rec, type, modifiedFieldNames){
-        var display = this.displayField;
-        
-        if (type === 'edit' && modifiedFieldNames && Ext.Array.contains(modifiedFieldNames, display) && this.value === rec.getId()) {
-            this.setRawValue(rec.get(display));
         }
     }
 

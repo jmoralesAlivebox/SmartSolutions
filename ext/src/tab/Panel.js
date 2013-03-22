@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @author Ed Spencer, Tommy Maintz, Brian Moeskau
  *
@@ -61,30 +44,6 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  *             }
  *         }]
  *     });
- * 
- * ## Vetoing Changes
- * 
- * User interaction when changing the tabs can be vetoed by listening to the {@link #beforetabchange} event.
- * By returning `false`, the tab change will not occur.
- * 
- *     @example
- *     Ext.create('Ext.tab.Panel', {
- *         renderTo: Ext.getBody(),
- *         width: 200,
- *         height: 200,
- *         listeners: {
- *             beforetabchange: function(tabs, newTab, oldTab) {
- *                 return newTab.title != 'P2';
- *             }
- *         },
- *         items: [{
- *             title: 'P1'
- *         }, {
- *             title: 'P2'
- *         }, {
- *             title: 'P3'
- *         }]
- *     }); 
  *
  * # Examples
  *
@@ -325,9 +284,8 @@ Ext.define('Ext.tab.Panel', {
     requires: ['Ext.layout.container.Card', 'Ext.tab.Bar'],
 
     /**
-     * @cfg {"top"/"bottom"/"left"/"right"} tabPosition
-     * The position where the tab strip should be rendered. Can be `top`, `bottom`,
-     * `left` or `right`
+     * @cfg {String} tabPosition
+     * The position where the tab strip should be rendered. Can be `top` or `bottom`.
      */
     tabPosition : 'top',
 
@@ -348,7 +306,7 @@ Ext.define('Ext.tab.Panel', {
      */
 
     /**
-     * @cfg {Ext.enums.Layout/Object} layout
+     * @cfg {Object} layout
      * Optional configuration object for the internal {@link Ext.layout.container.Card card layout}.
      * If present, this is passed straight through to the layout's constructor
      */
@@ -403,15 +361,14 @@ Ext.define('Ext.tab.Panel', {
     initComponent: function() {
         var me = this,
             dockedItems = [].concat(me.dockedItems || []),
-            activeTab = me.activeTab || (me.activeTab = 0),
-            tabPosition = me.tabPosition;
+            activeTab = me.activeTab || (me.activeTab = 0);
 
         // Configure the layout with our deferredRender, and with our activeTeb
         me.layout = new Ext.layout.container.Card(Ext.apply({
             owner: me,
             deferredRender: me.deferredRender,
             itemCls: me.itemCls,
-            activeItem: activeTab
+            activeItem: me.activeTab
         }, me.layout));
 
         /**
@@ -419,8 +376,8 @@ Ext.define('Ext.tab.Panel', {
          */
         me.tabBar = new Ext.tab.Bar(Ext.apply({
             dock: me.tabPosition,
-            orientation: (tabPosition == 'top' || tabPosition == 'bottom') ? 'horizontal' : 'vertical',
             plain: me.plain,
+            border: me.border,
             cardLayout: me.layout,
             tabPanel: me
         }, me.tabBar));
@@ -452,11 +409,14 @@ Ext.define('Ext.tab.Panel', {
         me.callParent(arguments);
 
         // We have to convert the numeric index/string ID config into its component reference
-        activeTab = me.activeTab = me.getComponent(activeTab);
+        me.activeTab = me.getComponent(activeTab);
 
         // Ensure that the active child's tab is rendered in the active UI state
-        if (activeTab) {
-        	me.tabBar.setActiveTab(activeTab.tab, true);
+        if (me.activeTab) {
+            me.activeTab.tab.activate(true);
+
+            // So that it knows what to deactivate in subsequent tab changes 
+            me.tabBar.activeTab = me.activeTab.tab;
         }
     },
 
@@ -561,7 +521,6 @@ Ext.define('Ext.tab.Panel', {
                 hidden: item.hidden && !item.hiddenByLayout, // only hide if it wasn't hidden by the layout itself
                 tooltip: item.tooltip,
                 tabBar: me.tabBar,
-                position: me.tabPosition,
                 closeText: item.closeText
             };
 

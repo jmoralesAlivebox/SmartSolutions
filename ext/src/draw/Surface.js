@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A Surface is an interface to render methods inside {@link Ext.draw.Component}.
  *
@@ -67,8 +50,6 @@ Ext.define('Ext.draw.Surface', {
     uses: ['Ext.draw.engine.Svg', 'Ext.draw.engine.Vml', 'Ext.draw.engine.SvgExporter', 'Ext.draw.engine.ImageExporter'],
 
     separatorRe: /[, ]+/,
-    
-    enginePriority: ['Svg', 'Vml'],
 
     statics: {
         /**
@@ -80,13 +61,14 @@ Ext.define('Ext.draw.Surface', {
          * @static
          */
         create: function(config, enginePriority) {
-            enginePriority = enginePriority || this.prototype.enginePriority;
+            enginePriority = enginePriority || ['Svg', 'Vml'];
 
             var i = 0,
-                len = enginePriority.length;
+                len = enginePriority.length,
+                surfaceClass;
 
             for (; i < len; i++) {
-                if (Ext.supports[enginePriority[i]]) {
+                if (Ext.supports[enginePriority[i]] !== false) {
                     return Ext.create('Ext.draw.engine.' + enginePriority[i], config);
                 }
             }
@@ -341,11 +323,12 @@ Ext.define('Ext.draw.Surface', {
     initGradients: function() {
         if (this.hasOwnProperty('gradients')) {
             var gradients = this.gradients,
-                fn = this.addGradient,
-                g, gLen;
+                gLen      = gradients.length,
+                fn        = this.addGradient,
+                g;
 
             if (gradients) {
-                for (g = 0, gLen = gradients.length; g < gLen; g++) {
+                for (g = 0; g < gLen; g++) {
                     if (fn.call(this, gradients[g], g, gLen) === false) {
                         break;
                     }
@@ -370,7 +353,7 @@ Ext.define('Ext.draw.Surface', {
         var me = this,
             width = me.width,
             height = me.height,
-            gradientId, gradient;
+            gradientId, gradient, backgroundSprite;
         if (Ext.isString(config)) {
             config = {
                 fill : config
@@ -548,6 +531,7 @@ Ext.define('Ext.draw.Surface', {
     add: function() {
         var args = Array.prototype.slice.call(arguments),
             sprite,
+            index,
             hasMultipleArgs = args.length > 1,
             items,
             results,

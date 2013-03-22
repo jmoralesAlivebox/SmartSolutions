@@ -6,9 +6,10 @@
  */
 
 /**
- * Barebones iframe implementation. For serious iframe work, see the
- * ManagedIFrame extension
+ * Barebones iframe implementation. For serious iframe work, see the ManagedIFrame extension
  * (http://www.sencha.com/forum/showthread.php?71961).
+ *
+ * @class Ext.ux.IFrame
  */
 Ext.define('Ext.ux.IFrame', {
     extend: 'Ext.Component',
@@ -39,7 +40,9 @@ Ext.define('Ext.ux.IFrame', {
     },
 
     initEvents : function() {
-        var me = this;
+        var me = this,
+            iframeEl = me.iframeEl.dom,
+            frameEl = me.getFrame();
         me.callParent();
         me.iframeEl.on('load', me.onLoad, me);
     },
@@ -144,15 +147,8 @@ Ext.define('Ext.ux.IFrame', {
         // relay event from the iframe's document to the document that owns the iframe...
 
         var iframeEl = this.iframeEl,
-
-            // Get the left-based iframe position
-            iframeXY = Ext.Element.getTrueXY(iframeEl),
-            originalEventXY = event.getXY(),
-
-            // Get the left-based XY position.
-            // This is because the consumer of the injected event (Ext.EventManager) will
-            // perform its own RTL normalization.
-            eventXY = Ext.EventManager.getPageXY(event.browserEvent);
+            iframeXY = iframeEl.getXY(),
+            eventXY = event.getXY();
 
         // the event from the inner document has XY relative to that document's origin,
         // so adjust it to use the origin of the iframe in the outer document:
@@ -160,7 +156,7 @@ Ext.define('Ext.ux.IFrame', {
 
         event.injectEvent(iframeEl); // blame the iframe for the event...
 
-        event.xy = originalEventXY; // restore the original XY (just for safety)
+        event.xy = eventXY; // restore the original XY (just for safety)
     },
 
     load: function (src) {

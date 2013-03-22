@@ -1,4 +1,6 @@
 /**
+ * @class Ext.ux.ToolbarDroppable
+ * @extends Object
  * Plugin which allows items to be dropped onto a toolbar and be turned into new Toolbar items.
  * To use the plugin, you just need to provide a createItem implementation that takes the drop
  * data as an argument and returns an object that can be placed onto the toolbar. Example:
@@ -16,8 +18,7 @@
  Ext.define('Ext.ux.ToolbarDroppable', {
 
     /**
-     * Creates new ToolbarDroppable.
-     * @param {Object} config Config options.
+     * @constructor
      */
     constructor: function(config) {
       Ext.apply(this, config);

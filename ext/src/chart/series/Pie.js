@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @class Ext.chart.series.Pie
  *
@@ -81,6 +64,8 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  *
  * We set `contrast` to `true` to flip the color of the label if it is to similar to the background color. Finally, we set the font family
  * and size through the `font` parameter.
+ *
+ * @xtype pie
  */
 Ext.define('Ext.chart.series.Pie', {
 
@@ -213,10 +198,6 @@ Ext.define('Ext.chart.series.Pie', {
             return ans;
         };
         me.__excludes = me.__excludes || [];
-    },
-    
-    onRedraw: function(){
-        this.initialize();    
     },
 
     // @private updates some onbefore render parameters.
@@ -634,7 +615,7 @@ Ext.define('Ext.chart.series.Pie', {
             resizing = chart.resizing,
             config = me.label,
             format = config.renderer,
-            field = config.field,
+            field = [].concat(config.field),
             centerX = me.centerX,
             centerY = me.centerY,
             middle = item.middle,
@@ -664,7 +645,7 @@ Ext.define('Ext.chart.series.Pie', {
         }
 
         label.setAttributes({
-            text: format(storeItem.get(field), label, storeItem, item, i, display, animate, index)
+            text: format(storeItem.get(field[index]))
         }, true);
 
         switch (display) {
@@ -731,15 +712,11 @@ Ext.define('Ext.chart.series.Pie', {
             rho = 1,
             rhoCenter,
             theta = Math.atan2(y, x || 1),
-            bbox = (callout && callout.label ? callout.label.getBBox() : {width:0,height:0}),
+            bbox = callout.label.getBBox(),
             offsetFromViz = 20,
             offsetToSide = 10,
             offsetBox = 10,
             p;
-
-        if (!bbox.width || !bbox.height) {
-            return;
-        }
 
         //should be able to config this.
         rho = item.endRho + offsetFromViz;

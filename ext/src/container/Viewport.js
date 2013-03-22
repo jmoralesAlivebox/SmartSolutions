@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A specialized container representing the viewable application area (the browser viewport).
  *
@@ -133,9 +116,9 @@ Ext.define('Ext.container.Viewport', {
     initComponent : function() {
         var me = this,
             html = document.body.parentNode,
-            el = me.el = Ext.getBody();
+            el;
 
-        // Get the DOM disruption over with before the Viewport renders and begins a layout
+        // Get the DOM disruption over with beforfe the Viewport renders and begins a layout
         Ext.getScrollbarSize();
         
         // Clear any dimensions, we will size later on
@@ -144,18 +127,16 @@ Ext.define('Ext.container.Viewport', {
         me.callParent(arguments);
         Ext.fly(html).addCls(Ext.baseCSSPrefix + 'viewport');
         if (me.autoScroll) {
-            Ext.fly(html).setStyle(me.getOverflowStyle());
             delete me.autoScroll;
+            Ext.fly(html).setStyle('overflow', 'auto');
         }
-        el.setHeight = el.setWidth = Ext.emptyFn;
+        me.el = el = Ext.getBody();
+        el.setHeight = Ext.emptyFn;
+        el.setWidth = Ext.emptyFn;
+        el.setSize = Ext.emptyFn;
         el.dom.scroll = 'no';
         me.allowDomMove = false;
         me.renderTo = me.el;
-    },
-    
-    // override here to prevent an extraneous warning
-    applyTargetCls: function(targetCls) {
-        this.el.addCls(targetCls);
     },
     
     onRender: function() {
@@ -184,9 +165,5 @@ Ext.define('Ext.container.Viewport', {
         if (width != this.width || height != this.height) {
             this.setSize(width, height);
         }
-    },
-
-    initHierarchyState: function(hierarchyState) {
-        this.callParent([this.hierarchyState = Ext.rootHierarchyState]);
     }
 });

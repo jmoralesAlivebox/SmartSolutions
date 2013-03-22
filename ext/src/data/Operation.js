@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @author Ed Spencer
  *
@@ -176,24 +159,14 @@ Ext.define('Ext.data.Operation', {
      * the server.
      * @markdown
      */
-    commitRecords: function(serverRecords) {
+    commitRecords: function (serverRecords) {
         var me = this,
-            commitRecords = me.actionCommitRecordsRe.test(me.action),
-            mc, index, clientRecords, serverRec, clientRec, i, len,
-            modifiedFields, recordModifiedFields;
+            mc, index, clientRecords, serverRec, clientRec, i, len;
 
         if (!me.actionSkipSyncRe.test(me.action)) {
             clientRecords = me.records;
 
             if (clientRecords && clientRecords.length) {
-
-                // If we plan to commit the records modified by the server's return records
-                // we collect all the fields which were modified as a result.
-                // This is so that a modifiedFields array can be passed into the commit codepath
-                // so that minimal UI updating can be applied.
-                if (commitRecords) {
-                    recordModifiedFields = [];
-                }
                 if (clientRecords.length > 1) {
                     // If this operation has multiple records, client records need to be matched up with server records
                     // so that any data returned from the server can be updated in the client records. If we don't have
@@ -208,44 +181,25 @@ Ext.define('Ext.data.Operation', {
                             serverRec = mc.findBy(me.matchClientRec, clientRec);
 
                             // Replace client record data with server record data
-                            modifiedFields = clientRec.copyFrom(serverRec);
-
-                            // If we plan to commit the records, collect modified field list for each record
-                            if (commitRecords) {
-                                recordModifiedFields.push(modifiedFields);
-                            }
+                            clientRec.copyFrom(serverRec);
                         }
                     } else {
                         for (i = 0, len = clientRecords.length; i < len; ++i) {
                             clientRec = clientRecords[i];
                             serverRec = serverRecords[i];
                             if (clientRec && serverRec) {
-                                modifiedFields = me.updateRecord(clientRec, serverRec);
-
-                                // If we plan to commit the records, collect modified field list for each record
-                                if (commitRecords) {
-                                    recordModifiedFields.push(modifiedFields);
-                                }
+                                me.updateRecord(clientRec, serverRec);
                             }
                         }
                     }
                 } else {
                     // operation only has one record, so just match the first client record up with the first server record
-                    modifiedFields = me.updateRecord(clientRecords[0], serverRecords[0]);   
-
-                    // If we plan to commit the records, collect modified field list for each record
-                    if (commitRecords) {
-                        recordModifiedFields[0] = modifiedFields;
-                    }
+                    this.updateRecord(clientRecords[0], serverRecords[0]);   
                 }
 
-                if (commitRecords) {
+                if (me.actionCommitRecordsRe.test(me.action)) {
                     for (index = clientRecords.length; index--; ) {
-
-                        // Pass array of field names which were modified as a result of the server's reply
-                        // In a grid, this avoids full row refreshes when the record returns unmodified.
-                        // See Ext.view.Table#shouldUpdateCell
-                        clientRecords[index].commit(false, recordModifiedFields[index]);
+                        clientRecords[index].commit();
                     }
                 }
             }
@@ -254,12 +208,9 @@ Ext.define('Ext.data.Operation', {
     
     updateRecord: function(clientRec, serverRec) {
         // if the client record is not a phantom, make sure the ids match before replacing the client data with server data.
-        if (serverRec && (clientRec.phantom || clientRec.getId() === serverRec.getId())) {
-            return clientRec.copyFrom(serverRec);
+        if(serverRec && (clientRec.phantom || clientRec.getId() === serverRec.getId())) {
+            clientRec.copyFrom(serverRec);
         }
-
-        // ID could not be matched up, no fields were modified.
-        return [];
     },
 
     // Private.

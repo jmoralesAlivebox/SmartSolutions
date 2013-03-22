@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @class Ext.data.association.HasOne
  * 
@@ -208,27 +191,16 @@ Ext.define('Ext.data.association.HasOne', {
      */
     createSetter: function() {
         var me              = this,
-            foreignKey      = me.foreignKey,
-            instanceName = me.instanceName;
+            ownerModel      = me.ownerModel,
+            foreignKey      = me.foreignKey;
 
         //'this' refers to the Model instance inside this function
         return function(value, options, scope) {
-            // If we were passed a record, the value to set is the key of that record.
-            var setByRecord = value && value.isModel,
-                valueToSet = setByRecord ? value.getId() : value;
-
-            // Setter was passed a record.
-            if (setByRecord) {
-                this[instanceName] = value;
+            if (value && value.isModel) {
+                value = value.getId();
             }
-
-            // Otherwise, if the key of foreign record !== passed value, delete the cached foreign record
-            else if (this[instanceName] instanceof Ext.data.Model && !this.isEqual(this.get(foreignKey), valueToSet)) {
-                delete this[instanceName];
-            }
-
-            // Set the forign key value
-            this.set(foreignKey, valueToSet);
+            
+            this.set(foreignKey, value);
 
             if (Ext.isFunction(options)) {
                 options = {

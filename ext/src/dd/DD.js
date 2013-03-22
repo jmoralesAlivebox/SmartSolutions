@@ -1,21 +1,4 @@
 /*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
-/*
  * This is a derivative of the similarly named class in the YUI Library.
  * The original license:
  * Copyright (c) 2006, Yahoo! Inc. All rights reserved.
@@ -118,13 +101,12 @@ Ext.define('Ext.dd.DD', {
                 Math.max(0, Math.min(oCoord.y, vpSize.height - elSize.height))
             ];
             fly.setXY(aCoord);
-            newLeft = this.getLocalX(fly);
+            newLeft = fly.getLocalX();
             newTop  = fly.getLocalY();
             this.deltaSetXY = [newLeft - oCoord.x, newTop - oCoord.y];
         } else {
             vpSize = this.cachedViewportSize;
-            this.setLocalXY(
-                fly,
+            fly.setLeftTop(
                 Math.max(0, Math.min(oCoord.x + this.deltaSetXY[0], vpSize.width - elSize.width)),
                 Math.max(0, Math.min(oCoord.y + this.deltaSetXY[1], vpSize.height - elSize.height))
             );
@@ -225,9 +207,7 @@ Ext.define('Ext.dd.DD', {
      * it to where the mouse location less the click offset would place us.
      * @param {Number} iPageX the X coordinate of the click
      * @param {Number} iPageY the Y coordinate of the click
-     * @return {Object} An object that contains the coordinates (Object.x and Object.y)
-     * @return {Number} return.x
-     * @return {Number} return.y
+     * @return an object that contains the coordinates (Object.x and Object.y)
      * @private
      */
     getTargetCoord: function(iPageX, iPageY) {
@@ -288,14 +268,6 @@ Ext.define('Ext.dd.DD', {
 
     toString: function() {
         return ("DD " + this.id);
-    },
-    
-    getLocalX: function(el) {
-        return el.getLocalX();
-    },
-
-    setLocalXY: function(el, x, y) {
-        el.setLocalXY(x, y);
     }
 
     //////////////////////////////////////////////////////////////////////////

@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A class which handles submission of data from {@link Ext.form.Basic Form}s and processes the returned response.
  *
@@ -90,15 +73,13 @@ Ext.define('Ext.form.action.Submit', {
 
     // inherit docs
     run : function(){
-        var me = this,
-            form = me.form;
-            
-        if (me.clientValidation === false || form.isValid()) {
-            me.doSubmit();
+        var form = this.form;
+        if (this.clientValidation === false || form.isValid()) {
+            this.doSubmit();
         } else {
             // client validation failed
-            me.failureType = Ext.form.action.Action.CLIENT_INVALID;
-            form.afterAction(me, false);
+            this.failureType = Ext.form.action.Action.CLIENT_INVALID;
+            form.afterAction(this, false);
         }
     },
 
@@ -107,60 +88,37 @@ Ext.define('Ext.form.action.Submit', {
      * Performs the submit of the form data.
      */
     doSubmit: function() {
-        var me = this,
-            ajaxOptions = Ext.apply(me.createCallback(), {
-                url: me.getUrl(),
-                method: me.getMethod(),
-                headers: me.headers
-            }),
-            form = me.form,
-            jsonSubmit = me.jsonSubmit || form.jsonSubmit,
-            paramsProp = jsonSubmit ? 'jsonData' : 'params',
-            formEl, formInfo;
+        var formEl,
+            ajaxOptions = Ext.apply(this.createCallback(), {
+                url: this.getUrl(),
+                method: this.getMethod(),
+                headers: this.headers
+            });
 
         // For uploads we need to create an actual form that contains the file upload fields,
         // and pass that to the ajax call so it can do its iframe-based submit method.
-        if (form.hasUpload()) {
-            formInfo = me.buildForm();
-            ajaxOptions.form = formInfo.formEl;
+        if (this.form.hasUpload()) {
+            formEl = ajaxOptions.form = this.buildForm();
             ajaxOptions.isUpload = true;
         } else {
-            ajaxOptions[paramsProp] = me.getParams(jsonSubmit);
+            ajaxOptions.params = this.getParams();
         }
 
         Ext.Ajax.request(ajaxOptions);
-        if (formInfo) {
-            me.cleanup(formInfo);
-        }
-    },
-    
-    cleanup: function(formInfo) {
-        var formEl = formInfo.formEl,
-            uploadEls = formInfo.uploadEls,
-            uploadFields = formInfo.uploadFields,
-            len = uploadFields.length,
-            i, field;
-            
-        for (i = 0; i < len; ++i) {
-            field = uploadFields[i];
-            if (!field.clearOnSubmit) {
-                field.restoreInput(uploadEls[i]);
-            }    
-        }
-        
+
         if (formEl) {
             Ext.removeNode(formEl);
-        }    
+        }
     },
 
     /**
      * @private
      * Builds the full set of parameters from the field values plus any additional configured params.
      */
-    getParams: function(useModelValues) {
-        var falseVal = false,
+    getParams: function() {
+        var nope = false,
             configParams = this.callParent(),
-            fieldParams = this.form.getValues(falseVal, falseVal, this.submitEmptyText !== falseVal, useModelValues);
+            fieldParams = this.form.getValues(nope, nope, this.submitEmptyText !== nope);
         return Ext.apply({}, fieldParams, configParams);
     },
 
@@ -175,27 +133,33 @@ Ext.define('Ext.form.action.Submit', {
      * @return {HTMLElement}
      */
     buildForm: function() {
-        var me = this,
-            fieldsSpec = [],
+        var fieldsSpec = [],
             formSpec,
             formEl,
-            basicForm = me.form,
-            params = me.getParams(),
+            basicForm = this.form,
+            params = this.getParams(),
             uploadFields = [],
-            uploadEls = [],
             fields = basicForm.getFields().items,
-            i,
-            len   = fields.length,
+            f,
+            fLen   = fields.length,
             field, key, value, v, vLen,
-            el;
+            u, uLen;
 
-        for (i = 0; i < len; ++i) {
-            field = fields[i];
+        for (f = 0; f < fLen; f++) {
+            field = fields[f];
 
-            // can only have a selected file value after being rendered
-            if (field.rendered && field.isFileUpload()) {
+            if (field.isFileUpload()) {
                 uploadFields.push(field);
             }
+        }
+
+        function addField(name, val) {
+            fieldsSpec.push({
+                tag: 'input',
+                type: 'hidden',
+                name: name,
+                value: Ext.String.htmlEncode(val)
+            });
         }
 
         for (key in params) {
@@ -205,19 +169,19 @@ Ext.define('Ext.form.action.Submit', {
                 if (Ext.isArray(value)) {
                     vLen = value.length;
                     for (v = 0; v < vLen; v++) {
-                        fieldsSpec.push(me.getFieldConfig(key, value[v]));
+                        addField(key, value[v]);
                     }
                 } else {
-                    fieldsSpec.push(me.getFieldConfig(key, value));
+                    addField(key, value);
                 }
             }
         }
 
         formSpec = {
             tag: 'form',
-            action: me.getUrl(),
-            method: me.getMethod(),
-            target: me.target || '_self',
+            action: this.getUrl(),
+            method: this.getMethod(),
+            target: this.target || '_self',
             style: 'display:none',
             cn: fieldsSpec
         };
@@ -233,29 +197,19 @@ Ext.define('Ext.form.action.Submit', {
         // Special handling for file upload fields: since browser security measures prevent setting
         // their values programatically, and prevent carrying their selected values over when cloning,
         // we have to move the actual field instances out of their components and into the form.
-        len = uploadFields.length;
+        uLen = uploadFields.length;
 
-        for (i = 0; i < len; ++i) {
-            el = uploadFields[i].extractFileInput();
-            formEl.appendChild(el);
-            uploadEls.push(el);
+        for (u = 0; u < uLen; u++) {
+            field = uploadFields[u];
+            if (field.rendered) { // can only have a selected file value after being rendered
+                formEl.appendChild(field.extractFileInput());
+            }
         }
 
-        return {
-            formEl: formEl,
-            uploadFields: uploadFields,
-            uploadEls: uploadEls
-        };
+        return formEl;
     },
 
-    getFieldConfig: function(name, value) {
-        return {
-            tag: 'input',
-            type: 'hidden',
-            name: name,
-            value: Ext.String.htmlEncode(value)
-        };
-    },
+
 
     /**
      * @private

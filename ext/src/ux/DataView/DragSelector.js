@@ -1,5 +1,8 @@
 /**
+ * @class Ext.ux.DataView.DragSelector
+ * @extends Object
  * @author Ed Spencer
+ * 
  */
 Ext.define('Ext.ux.DataView.DragSelector', {
     requires: ['Ext.dd.DragTracker', 'Ext.util.Region'],

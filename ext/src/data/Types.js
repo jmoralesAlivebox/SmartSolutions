@@ -1,86 +1,52 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
- * This is a static class containing the system-supplied data types
- * which may be given to a {@link Ext.data.Field Field}.
- *
- * The properties in this class are used as type indicators in the
- * {@link Ext.data.Field Field} class, so to test whether a Field is
- * of a certain type, compare the {@link Ext.data.Field#type type}
- * property against properties of this class.
- *
- * Developers may add their own application-specific data types to
- * this class. Definition names must be UPPERCASE. Each type
- * definition must contain three properties:
- *
- *   - `convert` : Function<br>
- *     A function to convert raw data values from a data block into
- *     the data to be stored in the Field. The function is passed the
- *     collowing parameters:
- *
- *       - **v** : Mixed<br>
- *         The data value as read by the Reader, if undefined will use
- *         the configured {@link Ext.data.Field#defaultValue defaultValue}.
- *       - **rec** : Mixed<br>
- *         The data object containing the row as read by the Reader.
- *         Depending on the Reader type, this could be an Array
- *         ({@link Ext.data.reader.Array ArrayReader}), an object
- *         ({@link Ext.data.reader.Json JsonReader}), or an XML element.
- * 
- *   - `sortType` : Function<br>
- *     A function to convert the stored data into comparable form, as
- *     defined by {@link Ext.data.SortTypes}.
- *
- *   - `type` : String<br>
- *     A textual data type name.
- *
- * For example, to create a VELatLong field (See the Microsoft Bing
- * Mapping API) containing the latitude/longitude value of a datapoint
- * on a map from a JsonReader data block
- *
- * which contained the properties `lat` and `long`, you would define a
- * new data type like this:
- *
- *     // Add a new Field data type which stores a VELatLong object in the Record.
- *     Ext.data.Types.VELATLONG = {
- *         convert: function(v, data) {
- *             return new VELatLong(data.lat, data.long);
- *         },
- *         sortType: function(v) {
- *             return v.Latitude;  // When sorting, order by latitude
- *         },
- *         type: 'VELatLong'
- *     };
- *
- * Then, when declaring a Model, use:
- *
- *     var types = Ext.data.Types; // allow shorthand type access
- *     Ext.define('Unit',
- *         extend: 'Ext.data.Model',
- *         fields: [
- *             { name: 'unitName', mapping: 'UnitName' },
- *             { name: 'curSpeed', mapping: 'CurSpeed', type: types.INT },
- *             { name: 'latitude', mapping: 'lat', type: types.FLOAT },
- *             { name: 'longitude', mapping: 'long', type: types.FLOAT },
- *             { name: 'position', type: types.VELATLONG }
- *         ]
- *     });
- *
+ * @class Ext.data.Types
+ * <p>This is a static class containing the system-supplied data types which may be given to a {@link Ext.data.Field Field}.<p/>
+ * <p>The properties in this class are used as type indicators in the {@link Ext.data.Field Field} class, so to
+ * test whether a Field is of a certain type, compare the {@link Ext.data.Field#type type} property against properties
+ * of this class.</p>
+ * <p>Developers may add their own application-specific data types to this class. Definition names must be UPPERCASE.
+ * each type definition must contain three properties:</p>
+ * <div class="mdetail-params"><ul>
+ * <li><code>convert</code> : <i>Function</i><div class="sub-desc">A function to convert raw data values from a data block into the data
+ * to be stored in the Field. The function is passed the collowing parameters:
+ * <div class="mdetail-params"><ul>
+ * <li><b>v</b> : Mixed<div class="sub-desc">The data value as read by the Reader, if undefined will use
+ * the configured <tt>{@link Ext.data.Field#defaultValue defaultValue}</tt>.</div></li>
+ * <li><b>rec</b> : Mixed<div class="sub-desc">The data object containing the row as read by the Reader.
+ * Depending on the Reader type, this could be an Array ({@link Ext.data.reader.Array ArrayReader}), an object
+ * ({@link Ext.data.reader.Json JsonReader}), or an XML element.</div></li>
+ * </ul></div></div></li>
+ * <li><code>sortType</code> : <i>Function</i> <div class="sub-desc">A function to convert the stored data into comparable form, as defined by {@link Ext.data.SortTypes}.</div></li>
+ * <li><code>type</code> : <i>String</i> <div class="sub-desc">A textual data type name.</div></li>
+ * </ul></div>
+ * <p>For example, to create a VELatLong field (See the Microsoft Bing Mapping API) containing the latitude/longitude value of a datapoint on a map from a JsonReader data block
+ * which contained the properties <code>lat</code> and <code>long</code>, you would define a new data type like this:</p>
+ *<pre><code>
+// Add a new Field data type which stores a VELatLong object in the Record.
+Ext.data.Types.VELATLONG = {
+    convert: function(v, data) {
+        return new VELatLong(data.lat, data.long);
+    },
+    sortType: function(v) {
+        return v.Latitude;  // When sorting, order by latitude
+    },
+    type: 'VELatLong'
+};
+</code></pre>
+ * <p>Then, when declaring a Model, use: <pre><code>
+var types = Ext.data.Types; // allow shorthand type access
+Ext.define('Unit',
+    extend: 'Ext.data.Model',
+    fields: [
+        { name: 'unitName', mapping: 'UnitName' },
+        { name: 'curSpeed', mapping: 'CurSpeed', type: types.INT },
+        { name: 'latitude', mapping: 'lat', type: types.FLOAT },
+        { name: 'longitude', mapping: 'long', type: types.FLOAT },
+        { name: 'position', type: types.VELATLONG }
+    ]
+});
+</code></pre>
+ * @singleton
  */
 Ext.define('Ext.data.Types', {
     singleton: true,
@@ -91,7 +57,7 @@ Ext.define('Ext.data.Types', {
     Ext.apply(Ext.data.Types, {
         /**
          * @property {RegExp} stripRe
-         * A regular expression for stripping non-numeric characters from a numeric value.
+         * A regular expression for stripping non-numeric characters from a numeric value. Defaults to <tt>/[\$,%]/g</tt>.
          * This should be overridden for localization.
          */
         stripRe: /[\$,%]/g,
@@ -121,17 +87,10 @@ Ext.define('Ext.data.Types', {
         /**
          * @property {Object} INT
          * This data type means that the raw data is converted into an integer before it is placed into a Record.
-         *
-         * The synonym `INTEGER` is equivalent.
+         * <p>The synonym <code>INTEGER</code> is equivalent.</p>
          */
         INT: {
             convert: function(v) {
-                // Handle values which are already numbers.
-                // Value truncation behaviour of parseInt is historic and must be maintained.
-                // parseInt(35.9)  and parseInt("35.9") returns 35
-                if (typeof v == 'number') {
-                    return parseInt(v);
-                }
                 return v !== undefined && v !== null && v !== '' ?
                     parseInt(String(v).replace(Ext.data.Types.stripRe, ''), 10) : (this.useNull ? null : 0);
             },
@@ -142,14 +101,10 @@ Ext.define('Ext.data.Types', {
         /**
          * @property {Object} FLOAT
          * This data type means that the raw data is converted into a number before it is placed into a Record.
-         *
-         * The synonym `NUMBER` is equivalent.
+         * <p>The synonym <code>NUMBER</code> is equivalent.</p>
          */
         FLOAT: {
             convert: function(v) {
-                if (typeof v === 'number') {
-                    return v;
-                }
                 return v !== undefined && v !== null && v !== '' ?
                     parseFloat(String(v).replace(Ext.data.Types.stripRe, ''), 10) : (this.useNull ? null : 0);
             },
@@ -159,16 +114,12 @@ Ext.define('Ext.data.Types', {
 
         /**
          * @property {Object} BOOL
-         * This data type means that the raw data is converted into a boolean before it is placed into
-         * a Record. The string "true" and the number 1 are converted to boolean true.
-         *
-         * The synonym `BOOLEAN` is equivalent.
+         * <p>This data type means that the raw data is converted into a boolean before it is placed into
+         * a Record. The string "true" and the number 1 are converted to boolean <code>true</code>.</p>
+         * <p>The synonym <code>BOOLEAN</code> is equivalent.</p>
          */
         BOOL: {
             convert: function(v) {
-                if (typeof v === 'boolean') {
-                    return v;
-                }
                 if (this.useNull && (v === undefined || v === null || v === '')) {
                     return null;
                 }
@@ -186,17 +137,22 @@ Ext.define('Ext.data.Types', {
          */
         DATE: {
             convert: function(v) {
-                var df = this.dateReadFormat || this.dateFormat,
+                var df = this.dateFormat,
                     parsed;
 
                 if (!v) {
                     return null;
                 }
-                // instanceof check ~10 times faster than Ext.isDate. Values here will not be cross-document objects
-                if (v instanceof Date) {
+                if (Ext.isDate(v)) {
                     return v;
                 }
                 if (df) {
+                    if (df == 'timestamp') {
+                        return new Date(v*1000);
+                    }
+                    if (df == 'time') {
+                        return new Date(parseInt(v, 10));
+                    }
                     return Ext.Date.parse(v, df);
                 }
 
@@ -211,26 +167,23 @@ Ext.define('Ext.data.Types', {
     Ext.apply(Ext.data.Types, {
         /**
          * @property {Object} BOOLEAN
-         * This data type means that the raw data is converted into a boolean before it is placed into
-         * a Record. The string "true" and the number 1 are converted to boolean `true`.
-         *
-         * The synonym `BOOL` is equivalent.
+         * <p>This data type means that the raw data is converted into a boolean before it is placed into
+         * a Record. The string "true" and the number 1 are converted to boolean <code>true</code>.</p>
+         * <p>The synonym <code>BOOL</code> is equivalent.</p>
          */
         BOOLEAN: this.BOOL,
 
         /**
          * @property {Object} INTEGER
          * This data type means that the raw data is converted into an integer before it is placed into a Record.
-         *
-         * The synonym `INT` is equivalent.
+         * <p>The synonym <code>INT</code> is equivalent.</p>
          */
         INTEGER: this.INT,
 
         /**
          * @property {Object} NUMBER
          * This data type means that the raw data is converted into a number before it is placed into a Record.
-         *
-         * The synonym `FLOAT` is equivalent.
+         * <p>The synonym <code>FLOAT</code> is equivalent.</p>
          */
         NUMBER: this.FLOAT
     });

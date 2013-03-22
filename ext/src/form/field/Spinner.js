@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A field with a pair of up/down spinner buttons. This class is not normally instantiated directly,
  * instead it is subclassed and the {@link #onSpinUp} and {@link #onSpinDown} methods are implemented
@@ -40,7 +23,7 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  *
  *         // override onSpinDown
  *         onSpinDown: function() {
- *             var me = this;
+ *             var val, me = this;
  *             if (!me.readOnly) {
  *                var val = parseInt(me.getValue().split(' '), 10)||0; // gets rid of " Pack", defaults to zero on parse failure
  *                if (val <= me.step) {
@@ -126,9 +109,9 @@ Ext.define('Ext.form.field.Spinner', {
      */
     onSpinDown: Ext.emptyFn,
 
-    triggerTpl: '<td style="{triggerStyle}" class="{triggerCls}">' +
-                    '<div class="' + Ext.baseCSSPrefix + 'trigger-index-0 ' + Ext.baseCSSPrefix + 'form-trigger ' + Ext.baseCSSPrefix + 'form-spinner-up {spinnerUpCls} {childElCls}" role="button"></div>' +
-                    '<div class="' + Ext.baseCSSPrefix + 'trigger-index-1 ' + Ext.baseCSSPrefix + 'form-trigger ' + Ext.baseCSSPrefix + 'form-spinner-down {spinnerDownCls} {childElCls}" role="button"></div>' +
+    triggerTpl: '<td style="{triggerStyle}">' +
+                    '<div class="' + Ext.baseCSSPrefix + 'trigger-index-0 ' + Ext.baseCSSPrefix + 'form-trigger ' + Ext.baseCSSPrefix + 'form-spinner-up" role="button"></div>' +
+                    '<div class="' + Ext.baseCSSPrefix + 'trigger-index-1 ' + Ext.baseCSSPrefix + 'form-trigger ' + Ext.baseCSSPrefix + 'form-spinner-down" role="button"></div>' +
                 '</td>' +
             '</tr>',
 
@@ -184,6 +167,10 @@ Ext.define('Ext.form.field.Spinner', {
         
         me.triggerCell = me.spinUpEl.parent(); 
 
+        // Set initial enabled/disabled states
+        me.setSpinUpEnabled(me.spinUpEnabled);
+        me.setSpinDownEnabled(me.spinDownEnabled);
+
         // Init up/down arrow keys
         if (me.keyNavEnabled) {
             me.spinnerKeyNav = new Ext.util.KeyNav(me.inputEl, {
@@ -199,32 +186,24 @@ Ext.define('Ext.form.field.Spinner', {
         }
     },
 
-    getSubTplMarkup: function(values) {
+    getSubTplMarkup: function() {
         var me = this,
-            childElCls = values.childElCls, // either '' or ' x-foo'
             field = Ext.form.field.Base.prototype.getSubTplMarkup.apply(me, arguments);
 
-        return '<table id="' + me.id + '-triggerWrap" class="' + Ext.baseCSSPrefix + 'form-trigger-wrap' + childElCls + '" cellpadding="0" cellspacing="0">' +
+        return '<table id="' + me.id + '-triggerWrap" class="' + Ext.baseCSSPrefix + 'form-trigger-wrap" cellpadding="0" cellspacing="0">' +
             '<tbody>' +
-                '<tr><td id="' + me.id + '-inputCell" class="' + Ext.baseCSSPrefix + 'form-trigger-input-cell' + childElCls + '">' + field + '</td>' +
+                '<tr><td id="' + me.id + '-inputCell" class="' + Ext.baseCSSPrefix + 'form-trigger-input-cell">' + field + '</td>' +
                 me.getTriggerMarkup() +
             '</tbody></table>';
     },
 
     getTriggerMarkup: function() {
-        return this.getTpl('triggerTpl').apply(this.getTriggerData());
-    },
-    
-    getTriggerData: function(){
         var me = this,
             hideTrigger = (me.readOnly || me.hideTrigger);
-            
-        return {
-            triggerCls: Ext.baseCSSPrefix + 'trigger-cell',
-            triggerStyle: hideTrigger ? 'display:none' : '',
-            spinnerUpCls: !me.spinUpEnabled ? me.trigger1Cls + '-disabled': '',
-            spinnerDownCls: !me.spinDownEnabled ? me.trigger2Cls + '-disabled': ''
-        };
+
+        return me.getTpl('triggerTpl').apply({
+            triggerStyle: 'width:' + me.triggerWidth + (hideTrigger ? 'px;display:none' : 'px')
+        });
     },
 
     /**
@@ -328,7 +307,8 @@ Ext.define('Ext.form.field.Spinner', {
             delta = e.getWheelDelta();
             if (delta > 0) {
                 me.spinUp();
-            } else if (delta < 0) {
+            }
+            else if (delta < 0) {
                 me.spinDown();
             }
             e.stopEvent();

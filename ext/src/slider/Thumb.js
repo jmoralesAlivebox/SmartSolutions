@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @class Ext.slider.Thumb
  * @private
@@ -78,7 +61,7 @@ Ext.define('Ext.slider.Thumb', {
             slider = me.slider,
             style = {};
 
-        style[slider.vertical ? 'bottom' : slider.horizontalProp] = slider.calculateThumbPosition(slider.normalizeValue(me.value)) + '%';
+        style[slider.vertical ? 'bottom' : 'left'] = slider.calculateThumbPosition(slider.normalizeValue(me.value)) + '%';
         return {
             style: style,
             id  : this.id,
@@ -91,10 +74,8 @@ Ext.define('Ext.slider.Thumb', {
      * move the thumb
      */
     move: function(v, animate) {
-        var me = this,
-            el = me.el,
-            slider = me.slider,
-            styleProp = slider.vertical ? 'bottom' : slider.horizontalProp,
+        var el = this.el,
+            styleProp = this.slider.vertical ? 'bottom' : 'left',
             to,
             from;
 
@@ -201,15 +182,13 @@ Ext.define('Ext.slider.Thumb', {
      * to the thumb and fires the 'dragstart' event
      */
     onDragStart: function(e){
-        var me = this,
-            slider = me.slider;
+        var me = this;
 
-        slider.onDragStart(me, e);
         me.el.addCls(Ext.baseCSSPrefix + 'slider-thumb-drag');
         me.dragging = me.slider.dragging = true;
         me.dragStartValue = me.value;
 
-        slider.fireEvent('dragstart', slider, e, me);
+        me.slider.fireEvent('dragstart', me.slider, e, me);
     },
 
     /**
@@ -264,7 +243,6 @@ Ext.define('Ext.slider.Thumb', {
             slider = me.slider,
             value  = me.value;
 
-        slider.onDragEnd(me, e);
         me.el.removeCls(Ext.baseCSSPrefix + 'slider-thumb-drag');
 
         me.dragging = slider.dragging = false;

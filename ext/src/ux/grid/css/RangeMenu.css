@@ -3,9 +3,7 @@
  */
 
 .ux-rangemenu-icon {
-    display: block;
-    height: 16px;
-    background: no-repeat 5px center;
+    margin-top: 0;
 }
 
 .ux-rangemenu-gt {

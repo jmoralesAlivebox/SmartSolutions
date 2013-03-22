@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * This class is used to send requests to the server using {@link Ext.direct.Manager Ext.Direct}. When a
  * request is made, the transport mechanism is handed off to the appropriate
@@ -106,7 +89,9 @@ Ext.define('Ext.data.proxy.Direct', {
 
     constructor: function(config){
         var me = this,
-            paramOrder;
+            paramOrder,
+            fn,
+            api;
             
         me.callParent(arguments);
         
@@ -114,52 +99,29 @@ Ext.define('Ext.data.proxy.Direct', {
         if (Ext.isString(paramOrder)) {
             me.paramOrder = paramOrder.split(me.paramOrderRe);
         }
-    },
-    
-    resolveMethods: function() {
-        var me = this,
-            fn = me.directFn,
-            api = me.api,
-            Manager = Ext.direct.Manager,
-            method;
         
+        fn = me.directFn;
         if (fn) {
-            method = me.directFn = Manager.parseMethod(fn);
-            
-            if (!Ext.isFunction(method)) {
-                Ext.Error.raise('Cannot resolve directFn ' + fn);
-            }
-        }
-        else if (api) {
-            for (fn in api) {
-                if (api.hasOwnProperty(fn)) {
-                    method = api[fn];
-                    api[fn] = Manager.parseMethod(method);
-                    
-                    if (!Ext.isFunction(api[fn])) {
-                        Ext.Error.raise('Cannot resolve Direct api ' + fn + ' method ' + method);
-                    }
-                }
-            }
+            me.directFn = Ext.direct.Manager.parseMethod(fn);
         }
         
-        me.methodsResolved = true;
+        api = me.api;
+        for (fn in api) {
+            if (api.hasOwnProperty(fn)) {
+                api[fn] = Ext.direct.Manager.parseMethod(api[fn]);
+            }
+        }
     },
 
     doRequest: function(operation, callback, scope) {
         var me = this,
             writer = me.getWriter(),
-            request = me.buildRequest(operation),
+            request = me.buildRequest(operation, callback, scope),
+            fn = me.api[request.action]  || me.directFn,
             params = request.params,
             args = [],
-            fn, method;
-        
-        if (!me.methodsResolved) {
-            me.resolveMethods();
-        }
+            method;
 
-        fn = me.api[request.action] || me.directFn;
-        
         //<debug>
         if (!fn) {
             Ext.Error.raise('No direct function specified for this proxy');
@@ -190,7 +152,9 @@ Ext.define('Ext.data.proxy.Direct', {
      * Inherit docs. We don't apply any encoding here because
      * all of the direct requests go out as jsonData
      */
-    applyEncoding: Ext.identityFn,
+    applyEncoding: function(value){
+        return value;
+    },
 
     createRequestCallback: function(request, operation, callback, scope){
         var me = this;

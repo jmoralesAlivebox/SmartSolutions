@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * Private utility class for Ext.Splitter.
  * @private
@@ -41,12 +24,12 @@ Ext.define('Ext.resizer.SplitterTracker', {
 
     getPrevCmp: function() {
         var splitter = this.getSplitter();
-        return splitter.previousSibling(':not([hidden])');
+        return splitter.previousSibling();
     },
 
     getNextCmp: function() {
         var splitter = this.getSplitter();
-        return splitter.nextSibling(':not([hidden])');
+        return splitter.nextSibling();
     },
 
     // ensure the tracker is enabled, store boxes of previous and next
@@ -58,10 +41,6 @@ Ext.define('Ext.resizer.SplitterTracker', {
             collapseEl = me.getSplitter().collapseEl,
             target = e.getTarget(),
             box;
-            
-        if (!prevCmp || !nextCmp) {
-            return false;
-        }
 
         if (collapseEl && target === me.getSplitter().collapseEl.dom) {
             return false;
@@ -81,13 +60,14 @@ Ext.define('Ext.resizer.SplitterTracker', {
             return false;
         }
 
+        me.createDragOverlay();
+
         return box;
     },
 
     // We move the splitter el. Add the proxy class.
     onStart: function(e) {
         var splitter = this.getSplitter();
-        this.createDragOverlay();
         splitter.addCls(splitter.baseCls + '-active');
     },
 
@@ -105,32 +85,29 @@ Ext.define('Ext.resizer.SplitterTracker', {
             // prev and nextConstrainRegions are the maximumBoxes minus the
             // minimumBoxes. The result is always the intersection
             // of these two boxes.
-            prevConstrainRegion, nextConstrainRegion, constrainOptions;
+            prevConstrainRegion, nextConstrainRegion;
 
         // vertical splitters, so resizing left to right
         if (orient === 'vertical') {
-            constrainOptions = {
-                prevCmp: prevCmp,
-                nextCmp: nextCmp,
-                prevBox: prevBox,
-                nextBox: nextBox,
-                defaultMin: defaultMin,
-                splitWidth: splitWidth
-            };
+
             // Region constructor accepts (top, right, bottom, left)
             // anchored/calculated from the left
             prevConstrainRegion = new Ext.util.Region(
                 prevBox.y,
-                me.getVertPrevConstrainRight(constrainOptions),
+                // Right boundary is x + maxWidth if there IS a maxWidth.
+                // Otherwise it is calculated based upon the minWidth of the next Component
+                (prevCmp.maxWidth ? prevBox.x + prevCmp.maxWidth : nextBox.right - (nextCmp.minWidth || defaultMin)) + splitWidth,
                 prevBox.bottom,
-                me.getVertPrevConstrainLeft(constrainOptions)
+                prevBox.x + (prevCmp.minWidth || defaultMin)
             );
             // anchored/calculated from the right
             nextConstrainRegion = new Ext.util.Region(
                 nextBox.y,
-                me.getVertNextConstrainRight(constrainOptions),
+                nextBox.right - (nextCmp.minWidth || defaultMin),
                 nextBox.bottom,
-                me.getVertNextConstrainLeft(constrainOptions)
+                // Left boundary is right - maxWidth if there IS a maxWidth.
+                // Otherwise it is calculated based upon the minWidth of the previous Component
+                (nextCmp.maxWidth ? nextBox.right - nextCmp.maxWidth : prevBox.x + (prevBox.minWidth || defaultMin)) - splitWidth
             );
         } else {
             // anchored/calculated from the top
@@ -167,22 +144,27 @@ Ext.define('Ext.resizer.SplitterTracker', {
             owner     = splitter.ownerCt,
             flexedSiblings = owner.query('>[flex]'),
             len       = flexedSiblings.length,
-            vertical  = orient === 'vertical',
             i         = 0,
-            dimension = vertical ? 'width' : 'height',
-            totalFlex = 0,
-            item, size;
+            dimension,
+            size,
+            totalFlex = 0;
 
         // Convert flexes to pixel values proportional to the total pixel width of all flexes.
         for (; i < len; i++) {
-            item = flexedSiblings[i];
-            size = vertical ? item.getWidth() : item.getHeight();
+            size = flexedSiblings[i].getWidth();
             totalFlex += size;
-            item.flex = size;
+            flexedSiblings[i].flex = size;
         }
 
-        offset = vertical ? offset[0] : offset[1];
+        offset = offset || me.getOffset('dragTarget');
 
+        if (orient === 'vertical') {
+            offset = offset[0];
+            dimension = 'width';
+        } else {
+            dimension = 'height';
+            offset = offset[1];
+        }
         if (prevCmp) {
             size = me.prevBox[dimension] + offset;
             if (prevCmp.flex) {
@@ -223,7 +205,7 @@ Ext.define('Ext.resizer.SplitterTracker', {
             splitter = me.getSplitter();
             
         splitter.removeCls(splitter.baseCls + '-active');
-        me.performResize(e, me.getResizeOffset());
+        me.performResize(e, me.getOffset('dragTarget'));
     },
 
     // Track the proxy and set the proper XY coordinates
@@ -244,32 +226,5 @@ Ext.define('Ext.resizer.SplitterTracker', {
 
     getSplitter: function() {
         return this.splitter;
-    },
-
-    getVertPrevConstrainRight: function(o) {
-        // Right boundary is x + maxWidth if there IS a maxWidth.
-        // Otherwise it is calculated based upon the minWidth of the next Component
-        return (o.prevCmp.maxWidth ? o.prevBox.x + o.prevCmp.maxWidth :
-            o.nextBox.right - (o.nextCmp.minWidth || o.defaultMin)) + o.splitWidth;
-    },
-
-    getVertPrevConstrainLeft: function(o) {
-        return o.prevBox.x + (o.prevCmp.minWidth || o.defaultMin);
-    },
-
-
-    getVertNextConstrainRight: function(o) {
-        return o.nextBox.right - (o.nextCmp.minWidth || o.defaultMin);
-    },
-
-    getVertNextConstrainLeft: function(o) {
-        // Left boundary is right - maxWidth if there IS a maxWidth.
-        // Otherwise it is calculated based upon the minWidth of the previous Component
-        return (o.nextCmp.maxWidth ? o.nextBox.right - o.nextCmp.maxWidth :
-            o.prevBox.x + (o.prevBox.minWidth || o.defaultMin)) - o.splitWidth;
-    },
-
-    getResizeOffset: function() {
-        return this.getOffset('dragTarget');
     }
 });

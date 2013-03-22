@@ -1,4 +1,6 @@
 /**
+ * @class Ext.ux.grid.filter.Filter
+ * @extends Ext.util.Observable
  * Abstract base class for filter implementations.
  */
 Ext.define('Ext.ux.grid.filter.Filter', {
@@ -99,7 +101,6 @@ Ext.define('Ext.ux.grid.filter.Filter', {
      * @return {Ext.menu.Menu}
      */
     createMenu: function(config) {
-        config.plain = true;
         return Ext.create('Ext.menu.Menu', config);
     },
 
@@ -108,7 +109,7 @@ Ext.define('Ext.ux.grid.filter.Filter', {
      * get and return the value of the filter.
      * Defaults to Ext.emptyFn.
      * @return {Object} The 'serialized' form of this filter
-     * @template
+     * @methodOf Ext.ux.grid.filter.Filter
      */
     getValue : Ext.emptyFn,
 
@@ -117,7 +118,7 @@ Ext.define('Ext.ux.grid.filter.Filter', {
      * set the value of the filter and fire the 'update' event.
      * Defaults to Ext.emptyFn.
      * @param {Object} data The value to set the filter
-     * @template
+     * @methodOf Ext.ux.grid.filter.Filter
      */
     setValue : Ext.emptyFn,
 
@@ -155,6 +156,7 @@ Ext.define('Ext.ux.grid.filter.Filter', {
      * and fires the 'serialize' event.
      * @return {Object/Array} An object or collection of objects containing
      * key value pairs representing the current configuration of the filter.
+     * @methodOf Ext.ux.grid.filter.Filter
      */
     serialize : function(){
         var args = this.getSerialArgs();
@@ -174,6 +176,7 @@ Ext.define('Ext.ux.grid.filter.Filter', {
      * Sets the status of the filter and fires the appropriate events.
      * @param {Boolean} active        The new filter state.
      * @param {Boolean} suppressEvent True to prevent events from being fired.
+     * @methodOf Ext.ux.grid.filter.Filter
      */
     setActive : function(active, suppressEvent){
         if(this.active != active){

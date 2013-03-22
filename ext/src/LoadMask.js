@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A modal, floating Component which may be shown above a specified {@link Ext.Component Component} while loading data.
  * When shown, the configured owning Component will be covered with a modality mask, and the LoadMask's {@link #msg} will be
@@ -48,11 +31,6 @@ Ext.define('Ext.LoadMask', {
     uses: ['Ext.data.StoreManager'],
 
     /* End Definitions */
-    
-    /**
-     * @cfg {Ext.Component} target The Component you wish to mask. The the mask will be automatically sized
-     * upon Component resize, and the message box will be kept centered.
-     */
 
     /**
      * @cfg {Ext.data.Store} store
@@ -96,24 +74,17 @@ Ext.define('Ext.LoadMask', {
     baseCls: Ext.baseCSSPrefix + 'mask-msg',
 
     childEls: [
-        'msgEl',
-        'msgTextEl'
+        'msgEl'
     ],
 
-    renderTpl: [
-        '<div id="{id}-msgEl" class="{[values.$comp.msgCls]} ',
-            Ext.baseCSSPrefix, 'mask-msg-inner{childElCls}">',
-            '<div id="{id}-msgTextEl" class="', Ext.baseCSSPrefix ,'mask-msg-text',
-                '{childElCls}"></div>',
-        '</div>'
-    ],
+    renderTpl: '<div id="{id}-msgEl" style="position:relative" class="{[values.$comp.msgCls]}"></div>',
 
-    // @private Obviously, it's floating.
+    // Private. Obviously, it's floating.
     floating: {
         shadow: 'frame'
     },
 
-    // @private Masks are not focusable
+    // Private. Masks are not focusable
     focusOnToFront: false,
 
     // When we put the load mask to the front of it's owner, we generally don't want to also bring the owning
@@ -122,23 +93,12 @@ Ext.define('Ext.LoadMask', {
 
     /**
      * Creates new LoadMask.
-     * @param {Object} [config] The config object.
+     * @param {Ext.Component} comp The Component you wish to mask. The the mask will be automatically sized
+     * upon Component resize, and the message box will be kept centered.</p>
+     * @param {Object} [config] The config object
      */
-    constructor : function(config) {
-        var me = this,
-            comp;
-
-        if (arguments.length === 2) {
-            //<debug>
-            if (Ext.isDefined(Ext.global.console)) {
-                Ext.global.console.warn('Ext.LoadMask: LoadMask now uses a standard 1 arg constructor: use the target config');
-            }
-            //</debug>
-            comp = config;
-            config = arguments[1];
-        } else {
-            comp = config.target;
-        }
+    constructor : function(comp, config) {
+        var me = this;
 
         // Element support to be deprecated
         if (!comp.isComponent) {
@@ -162,14 +122,15 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    bindComponent: function(comp) {
+    bindComponent: function(comp){
         var me = this,
             listeners = {
                 scope: this,
                 resize: me.sizeMask,
                 added: me.onComponentAdded,
                 removed: me.onComponentRemoved
-            };
+            },
+            hierarchyEventSource = Ext.container.Container.hierarchyEventSource;
             
         if (comp.floating) {
             listeners.move = me.sizeMask;
@@ -184,7 +145,7 @@ Ext.define('Ext.LoadMask', {
         me.mon(comp, listeners);
         
         // subscribe to the observer that manages the hierarchy
-        me.mon(me.hierarchyEventSource, {
+        me.mon(hierarchyEventSource, {
             show: me.onContainerShow,
             hide: me.onContainerHide,
             expand: me.onContainerExpand,
@@ -193,7 +154,7 @@ Ext.define('Ext.LoadMask', {
         });
     },
 
-    onComponentAdded: function(owner) {
+    onComponentAdded: function(owner){
         var me = this;
         delete me.activeOwner;
         me.floatParent = owner;
@@ -203,8 +164,6 @@ Ext.define('Ext.LoadMask', {
         if (owner) {
             me.activeOwner = owner;
             me.mon(owner, 'move', me.sizeMask, me);
-        } else {
-            me.preventBringToFront = true;
         }
         owner = me.floatParent.ownerCt;
         if (me.rendered && me.isVisible() && owner) {
@@ -213,7 +172,7 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    onComponentRemoved: function(owner) {
+    onComponentRemoved: function(owner){
         var me = this,
             activeOwner = me.activeOwner,
             floatOwner = me.floatOwner;
@@ -230,38 +189,38 @@ Ext.define('Ext.LoadMask', {
 
     afterRender: function() {
         this.callParent(arguments);
-            this.container = this.floatParent.getContentTarget();
+        this.container = this.floatParent.getContentTarget();
     },
 
-    onContainerShow: function(container) {
+    onContainerShow: function(container){
         if (this.isActiveContainer(container)) {
             this.onComponentShow();
         }
     },
 
-    onContainerHide: function(container) {
+    onContainerHide: function(container){
         if (this.isActiveContainer(container)) {
             this.onComponentHide();
         }
     },
 
-    onContainerExpand: function(container) {
+    onContainerExpand: function(container){
         if (this.isActiveContainer(container)) {
             this.onComponentShow();
         }
     },
 
-    onContainerCollapse: function(container) {
+    onContainerCollapse: function(container){
         if (this.isActiveContainer(container)) {
             this.onComponentHide();
         }
     },
 
-    isActiveContainer: function(container) {
+    isActiveContainer: function(container){
         return this.isDescendantOf(container);
     },
 
-    onComponentHide: function() {
+    onComponentHide: function(){
         var me = this;
 
         if (me.rendered && me.isVisible()) {
@@ -270,7 +229,7 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    onComponentShow: function() {
+    onComponentShow: function(){
         if (this.showNext) {
             this.show();
         }
@@ -307,24 +266,18 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    getStoreListeners: function(store) {
-        var load = this.onLoad,
-            beforeLoad = this.onBeforeLoad,
-            result = {
-                // Fired when a range is requested for rendering that is not in the cache
-                cachemiss: beforeLoad,
+    getStoreListeners: function(){
+        return {
+            beforeload: this.onBeforeLoad,
+            load: this.onLoad,
+            exception: this.onLoad,
 
-                // Fired when a range for rendering which was previously missing from the cache is loaded
-                cachefilled: load
-            };
+            // Fired when a range is requested for rendering that is not in the cache
+            cachemiss: this.onBeforeLoad,
 
-        // Only need to mask on load if the proxy is asynchronous - ie: Ajax/JsonP
-        if (!store.proxy.isSynchronous) {
-            result.beforeLoad = beforeLoad;
-            result.load = load;
-            result.prefetch = load;
-        }
-        return result;
+            // Fired when a range for rendering which was previously missing from the cache is loaded
+            cachefilled: this.onLoad
+        };
     },
 
     onDisable : function() {
@@ -334,16 +287,16 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    getOwner: function() {
+    getOwner: function(){
         return this.ownerCt || this.floatParent;
     },
 
-    getMaskTarget: function() {
+    getMaskTarget: function(){
         var owner = this.getOwner();
         return this.useTargetEl ? owner.getTargetEl() : owner.getEl();
     },
 
-    // @private
+    // private
     onBeforeLoad : function() {
         var me = this,
             owner = me.getOwner(),
@@ -367,7 +320,7 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    maybeShow: function() {
+    maybeShow: function(){
         var me = this,
             owner = me.getOwner();
 
@@ -397,14 +350,13 @@ Ext.define('Ext.LoadMask', {
         me.loading = true;
 
         if (me.useMsg) {
-            msgEl.show();
-            me.msgTextEl.update(me.msg);
+            msgEl.show().update(me.msg);
         } else {
             msgEl.parent().hide();
         }
     },
 
-    hide: function() {
+    hide: function(){
         // Element support to be deprecated
         if (this.isElement) {
             this.ownerCt.unmask();
@@ -415,12 +367,12 @@ Ext.define('Ext.LoadMask', {
         return this.callParent(arguments);
     },
 
-    onHide: function() {
+    onHide: function(){
         this.callParent();
         this.getMaskEl().hide();
     },
 
-    show: function() {
+    show: function(){
         // Element support to be deprecated
         if (this.isElement) {
             this.ownerCt.mask(this.useMsg ? this.msg : '', this.msgCls);
@@ -450,13 +402,13 @@ Ext.define('Ext.LoadMask', {
         return me.mixins.floating.setZIndex.apply(me, arguments);
     },
 
-    // @private
+    // private
     onLoad : function() {
         this.loading = false;
         this.hide();
     },
 
-    onDestroy: function() {
+    onDestroy: function(){
         var me = this;
 
         if (me.isElement) {

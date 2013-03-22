@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * Ext.Direct aims to streamline communication between the client and server by providing a single interface that
  * reduces the amount of common code typically required to validate data and handle returned data packets (reading data,
@@ -61,18 +44,16 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  * @singleton
  * @alternateClassName Ext.Direct
  */
-
 Ext.define('Ext.direct.Manager', {
-    singleton: true,
 
-    requires: [
-        'Ext.util.MixedCollection',
-        'Ext.app.domain.Direct'
-    ],
+    /* Begin Definitions */
+    singleton: true,
 
     mixins: {
         observable: 'Ext.util.Observable'
     },
+
+    requires: ['Ext.util.MixedCollection'],
 
     /**
      * Exception types.
@@ -83,33 +64,29 @@ Ext.define('Ext.direct.Manager', {
         LOGIN: 'login',
         SERVER: 'exception'
     },
-    
-    constructor: function() {
+
+    /* End Definitions */
+
+    constructor: function(){
         var me = this;
 
         me.addEvents(
             /**
              * @event event
-             *
              * Fires after an event.
-             *
-             * @param {Ext.direct.Event} event The Ext.direct.Event type that occurred.
+             * @param {Ext.direct.Event} e The Ext.direct.Event type that occurred.
              * @param {Ext.direct.Provider} provider The {@link Ext.direct.Provider Provider}.
              */
             'event',
-            
             /**
              * @event exception
-             *
              * Fires after an event exception.
-             *
-             * @param {Ext.direct.Event} event The event type that occurred.
+             * @param {Ext.direct.Event} e The event type that occurred.
              */
             'exception'
         );
-        
         me.transactions = new Ext.util.MixedCollection();
-        me.providers    = new Ext.util.MixedCollection();
+        me.providers = new Ext.util.MixedCollection();
 
         me.mixins.observable.constructor.call(me);
     },
@@ -118,48 +95,48 @@ Ext.define('Ext.direct.Manager', {
      * Adds an Ext.Direct Provider and creates the proxy or stub methods to execute server-side methods. If the provider
      * is not already connected, it will auto-connect.
      *
-     *      var pollProv = new Ext.direct.PollingProvider({
-     *          url: 'php/poll2.php'
-     *      });
+     *     var pollProv = new Ext.direct.PollingProvider({
+     *         url: 'php/poll2.php'
+     *     });
      *
-     *      Ext.direct.Manager.addProvider({
-     *          type: 'remoting',           // create a {@link Ext.direct.RemotingProvider}
-     *          url:  'php/router.php',     // url to connect to the Ext.Direct server-side router.
-     *          actions: {                  // each property within the actions object represents a Class
-     *              TestAction: [{          // array of methods within each server side Class
-     *                  name: 'doEcho',     // name of method
-     *                  len:  1
-     *              }, {
-     *                  name: 'multiply',
-     *                  len:  1
-     *              }, {
-     *                  name: 'doForm',
-     *                  formHandler: true   // handle form on server with Ext.Direct.Transaction
-     *              }]
-     *          },
-     *          namespace: 'myApplication', // namespace to create the Remoting Provider in
-     *      }, {
-     *          type: 'polling',            // create a {@link Ext.direct.PollingProvider}
-     *          url:  'php/poll.php'
-     *      },
-     *      pollProv);                      // reference to previously created instance
+     *     Ext.direct.Manager.addProvider({
+     *         "type":"remoting",       // create a {@link Ext.direct.RemotingProvider}
+     *         "url":"php\/router.php", // url to connect to the Ext.Direct server-side router.
+     *         "actions":{              // each property within the actions object represents a Class
+     *             "TestAction":[       // array of methods within each server side Class
+     *             {
+     *                 "name":"doEcho", // name of method
+     *                 "len":1
+     *             },{
+     *                 "name":"multiply",
+     *                 "len":1
+     *             },{
+     *                 "name":"doForm",
+     *                 "formHandler":true, // handle form on server with Ext.Direct.Transaction
+     *                 "len":1
+     *             }]
+     *         },
+     *         "namespace":"myApplication",// namespace to create the Remoting Provider in
+     *     },{
+     *         type: 'polling', // create a {@link Ext.direct.PollingProvider}
+     *         url:  'php/poll.php'
+     *     }, pollProv); // reference to previously created instance
      *
      * @param {Ext.direct.Provider/Object...} provider
      * Accepts any number of Provider descriptions (an instance or config object for
-     * a Provider). Each Provider description instructs Ext.Direct how to create
+     * a Provider). Each Provider description instructs Ext.Directhow to create
      * client-side stub methods.
      */
-    addProvider: function(provider) {
+    addProvider : function(provider){
         var me = this,
             args = arguments,
-            relayers = me.relayers || (me.relayers = {}),
-            i, len;
+            i = 0,
+            len;
 
         if (args.length > 1) {
-            for (i = 0, len = args.length; i < len; ++i) {
+            for (len = args.length; i < len; ++i) {
                 me.addProvider(args[i]);
             }
-            
             return;
         }
 
@@ -167,13 +144,9 @@ Ext.define('Ext.direct.Manager', {
         if (!provider.isProvider) {
             provider = Ext.create('direct.' + provider.type + 'provider', provider);
         }
-        
         me.providers.add(provider);
         provider.on('data', me.onProviderData, me);
-        
-        if (provider.relayedEvents) {
-            relayers[provider.id] = me.relayEvents(provider, provider.relayedEvents);
-        }
+
 
         if (!provider.isConnected()) {
             provider.connect();
@@ -185,143 +158,107 @@ Ext.define('Ext.direct.Manager', {
     /**
      * Retrieves a {@link Ext.direct.Provider provider} by the **{@link Ext.direct.Provider#id id}** specified when the
      * provider is {@link #addProvider added}.
-     *
      * @param {String/Ext.direct.Provider} id The id of the provider, or the provider instance.
      */
-    getProvider: function(id) {
+    getProvider : function(id){
         return id.isProvider ? id : this.providers.get(id);
     },
 
     /**
      * Removes the provider.
-     *
      * @param {String/Ext.direct.Provider} provider The provider instance or the id of the provider.
-     *
      * @return {Ext.direct.Provider} The provider, null if not found.
      */
-    removeProvider: function(provider) {
+    removeProvider : function(provider){
         var me = this,
-            providers = me.providers,
-            relayers = me.relayers,
-            id;
+            providers = me.providers;
 
         provider = provider.isProvider ? provider : providers.get(provider);
 
         if (provider) {
             provider.un('data', me.onProviderData, me);
-
-            id = provider.id;
-            
-            if (relayers[id]) {
-                relayers[id].destroy();
-                delete relayers[id];
-            }
-            
             providers.remove(provider);
-            
             return provider;
         }
-        
         return null;
     },
 
     /**
      * Adds a transaction to the manager.
-     *
-     * @param {Ext.direct.Transaction} transaction The transaction to add
-     *
-     * @return {Ext.direct.Transaction} transaction
-     *
      * @private
+     * @param {Ext.direct.Transaction} transaction The transaction to add
+     * @return {Ext.direct.Transaction} transaction
      */
-    addTransaction: function(transaction) {
+    addTransaction: function(transaction){
         this.transactions.add(transaction);
-        
         return transaction;
     },
 
     /**
      * Removes a transaction from the manager.
-     *
-     * @param {String/Ext.direct.Transaction} transaction The transaction/id of transaction to remove
-     *
-     * @return {Ext.direct.Transaction} transaction
-     *
      * @private
+     * @param {String/Ext.direct.Transaction} transaction The transaction/id of transaction to remove
+     * @return {Ext.direct.Transaction} transaction
      */
-    removeTransaction: function(transaction) {
-        var me = this;
-        
-        transaction = me.getTransaction(transaction);
-        me.transactions.remove(transaction);
-        
+    removeTransaction: function(transaction){
+        transaction = this.getTransaction(transaction);
+        this.transactions.remove(transaction);
         return transaction;
     },
 
     /**
      * Gets a transaction
-     *
-     * @param {String/Ext.direct.Transaction} transaction The transaction/id of transaction to get
-     *
-     * @return {Ext.direct.Transaction}
-     *
      * @private
+     * @param {String/Ext.direct.Transaction} transaction The transaction/id of transaction to get
+     * @return {Ext.direct.Transaction}
      */
-    getTransaction: function(transaction) {
-        return typeof transaction === 'object' ? transaction : this.transactions.get(transaction);
+    getTransaction: function(transaction){
+        return Ext.isObject(transaction) ? transaction : this.transactions.get(transaction);
     },
 
-    onProviderData: function(provider, event) {
+    onProviderData : function(provider, event){
         var me = this,
-            i, len;
+            i = 0,
+            len;
 
         if (Ext.isArray(event)) {
-            for (i = 0, len = event.length; i < len; ++i) {
+            for (len = event.length; i < len; ++i) {
                 me.onProviderData(provider, event[i]);
             }
-            
             return;
         }
-        
         if (event.name && event.name != 'event' && event.name != 'exception') {
             me.fireEvent(event.name, event);
-        }
-        else if (event.status === false) {
+        } else if (event.status === false) {
             me.fireEvent('exception', event);
         }
-        
         me.fireEvent('event', event, provider);
     },
     
     /**
      * Parses a direct function. It may be passed in a string format, for example:
      * "MyApp.Person.read".
-     *
-     * @param {String/Function} fn The direct function
-     *
-     * @return {Function} The function to use in the direct call. Null if not found
-     *
      * @protected
+     * @param {String/Function} fn The direct function
+     * @return {Function} The function to use in the direct call. Null if not found
      */
-    parseMethod: function(fn) {
+    parseMethod: function(fn){
         if (Ext.isString(fn)) {
             var parts = fn.split('.'),
                 i = 0,
                 len = parts.length,
-                current = Ext.global;
+                current = window;
                 
             while (current && i < len) {
                 current = current[parts[i]];
                 ++i;
             }
-            
             fn = Ext.isFunction(current) ? current : null;
         }
-        
         return fn || null;
     }
     
-}, function() {
+}, function(){
     // Backwards compatibility
     Ext.Direct = Ext.direct.Manager;
 });

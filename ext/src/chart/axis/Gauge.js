@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @class Ext.chart.axis.Gauge
  *
@@ -137,10 +120,10 @@ Ext.define('Ext.chart.axis.Gauge', {
             labelBBox;
 
         if (!labelSprite) {
-            me.titleSprite = labelSprite = surface.add(Ext.apply({
+            me.titleSprite = labelSprite = surface.add({
                 type: 'text',
                 zIndex: 2
-            }, me.axisTitleStyle, me.labelTitle));
+            });
         }
         labelSprite.setAttributes(Ext.apply({
             text: me.title
@@ -179,7 +162,7 @@ Ext.define('Ext.chart.axis.Gauge', {
             cos = Math.cos,
             sin = Math.sin,
             labelConf = this.label,
-            renderer = labelConf.renderer || Ext.identityFn;
+            renderer = labelConf.renderer || function(v) { return v; };
 
         if (!this.labelArray) {
             //draw scale

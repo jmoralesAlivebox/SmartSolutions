@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @docauthor Jason Johnston <jason@sencha.com>
  *
@@ -143,28 +126,10 @@ Ext.define('Ext.form.field.Text', {
      */
 
     /**
-     * @cfg {Boolean} [allowBlank=true]
-     * Specify false to validate that the value's length must be > 0. If `true`, then a blank value is **always** taken to be valid regardless of any {@link #vtype}
-     * validation that may be applied.
-     *
-     * If {@link #vtype} validation must still be applied to blank values, configure {@link #validateBlank} as `true`;
+     * @cfg {Boolean} allowBlank
+     * Specify false to validate that the value's length is > 0
      */
     allowBlank : true,
-
-    /**
-     * @cfg {Boolean} [validateBlank=false]
-     * Specify as `true` to modify the behaviour of {@link #allowBlank} so that blank values are not passed as valid, but are subject to any configure {@link #vtype} validation.
-     * @since 4.2.0
-     */
-    validateBlank: false,
-
-    /**
-     * @cfg {Boolean} allowOnlyWhitespace
-     * Specify false to automatically trim the value before validating
-     * the whether the value is blank. Setting this to false automatically
-     * sets {@link #allowBlank} to false.
-     */
-    allowOnlyWhitespace: true,
 
     /**
      * @cfg {Number} minLength
@@ -188,11 +153,11 @@ Ext.define('Ext.form.field.Text', {
      * True to set the maxLength property on the underlying input field. Defaults to false
      */
 
-    //<locale>
     /**
      * @cfg {String} minLengthText
      * Error text to display if the **{@link #minLength minimum length}** validation fails.
      */
+    //<locale>
     minLengthText : 'The minimum length for this field is {0}',
     //</locale>
 
@@ -288,10 +253,6 @@ Ext.define('Ext.form.field.Text', {
 
     initComponent: function () {
         var me = this;
-        
-        if (me.allowOnlyWhitespace === false) {
-            me.allowBlank = false;
-        }
 
         me.callParent();
 
@@ -522,7 +483,7 @@ Ext.define('Ext.form.field.Text', {
     },
     
     // private
-    beforeFocus : function(){
+    preFocus : function(){
         var me = this,
             inputEl = me.inputEl,
             emptyText = me.emptyText,
@@ -538,26 +499,8 @@ Ext.define('Ext.form.field.Text', {
             me.inputEl.removeCls(me.emptyCls);
         }
         if (me.selectOnFocus || isEmpty) {
-            // see: http://code.google.com/p/chromium/issues/detail?id=4505
-            if (Ext.isWebKit) {
-                if (!me.inputFocusTask) {
-                    me.inputFocusTask = new Ext.util.DelayedTask(me.focusInput, me);
-                }
-                me.inputFocusTask.delay(1);
-            } else {
-                inputEl.dom.select();
-            }
+            inputEl.dom.select();
         }
-    },
-    
-    focusInput: function(){
-        var input = this.inputEl;
-        if (input) {
-            input = input.dom;
-            if (input) {
-                input.select();
-            }
-        }    
     },
 
     onFocus: function() {
@@ -704,11 +647,13 @@ Ext.define('Ext.form.field.Text', {
         var me = this,
             errors = me.callParent(arguments),
             validator = me.validator,
+            emptyText = me.emptyText,
+            allowBlank = me.allowBlank,
             vtype = me.vtype,
             vtypes = Ext.form.field.VTypes,
             regex = me.regex,
             format = Ext.String.format,
-            msg, trimmed, isBlank;
+            msg;
 
         value = value || me.processRawValue(me.getRawValue());
 
@@ -718,23 +663,16 @@ Ext.define('Ext.form.field.Text', {
                 errors.push(msg);
             }
         }
-        
-        trimmed = me.allowOnlyWhitespace ? value : Ext.String.trim(value);
 
-        if (trimmed.length < 1 || (value === me.emptyText && me.valueContainsPlaceholder)) {
-            if (!me.allowBlank) {
+        if (value.length < 1 || (value === me.emptyText && me.valueContainsPlaceholder)) {
+            if (!allowBlank) {
                 errors.push(me.blankText);
             }
-            // If we are not configured to validate blank values, there cannot be any additional errors
-            if (!me.validateBlank) {
-                return errors;
-            }
-            isBlank = true;
+            //if value is blank, there cannot be any additional errors
+            return errors;
         }
 
-        // If a blank value has been allowed through, then exempt it dfrom the minLength check.
-        // It must be allowed to hit the vtype validation.
-        if (!isBlank && value.length < me.minLength) {
+        if (value.length < me.minLength) {
             errors.push(format(me.minLengthText, me.minLength));
         }
 
@@ -743,7 +681,7 @@ Ext.define('Ext.form.field.Text', {
         }
 
         if (vtype) {
-            if (!vtypes[vtype](value, me)) {
+            if(!vtypes[vtype](value, me)){
                 errors.push(me.vtypeText || vtypes[vtype +'Text']);
             }
         }
@@ -811,16 +749,6 @@ Ext.define('Ext.form.field.Text', {
                 me.lastInputWidth = width;
                 delete me.autoSizing;
             }
-        }
-    },
-    
-    onDestroy: function(){
-        var me = this;
-        me.callParent();
-        
-        if (me.inputFocusTask) {
-            me.inputFocusTask.cancel();
-            me.inputFocusTask = null;
         }
     }
 });

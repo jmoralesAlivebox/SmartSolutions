@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * Represents a single sorter that can be applied to a Store. The sorter is used
  * to compare two values against each other for the purpose of ordering them. Ordering
@@ -74,7 +57,7 @@ Ext.define('Ext.util.Sorter', {
      * The property to sort by. Required unless {@link #sorterFn} is provided. The property is extracted from the object
      * directly and compared for sorting using the built in comparison operators.
      */
-
+    
     /**
      * @cfg {Function} sorterFn
      * A specific sorter function to execute. Can be passed instead of {@link #property}. This sorter function allows
@@ -85,39 +68,39 @@ Ext.define('Ext.util.Sorter', {
      *   - 0 if o1 is "equal" to o2
      *   - 1 if o1 is "greater than" o2
      */
-
+    
     /**
      * @cfg {String} root
      * Optional root property. This is mostly useful when sorting a Store, in which case we set the root to 'data' to
      * make the filter pull the {@link #property} out of the data object of each item
      */
-
+    
     /**
      * @cfg {Function} transform
      * A function that will be run on each value before it is compared in the sorter. The function will receive a single
      * argument, the value.
      */
-
+    
     /**
      * @cfg {String} direction
      * The direction to sort by.
      */
     direction: "ASC",
-
+    
     constructor: function(config) {
         var me = this;
-
+        
         Ext.apply(me, config);
-
+        
         //<debug>
         if (me.property === undefined && me.sorterFn === undefined) {
             Ext.Error.raise("A Sorter requires either a property or a sorter function");
         }
         //</debug>
-
+        
         me.updateSortFunction();
     },
-
+    
     /**
      * @private
      * Creates and returns a function which sorts an array by the given property and direction
@@ -125,16 +108,17 @@ Ext.define('Ext.util.Sorter', {
      */
     createSortFunction: function(sorterFn) {
         var me        = this,
+            property  = me.property,
             direction = me.direction || "ASC",
             modifier  = direction.toUpperCase() == "DESC" ? -1 : 1;
-
+        
         //create a comparison function. Takes 2 objects, returns 1 if object 1 is greater,
         //-1 if object 2 is greater or 0 if they are equal
         return function(o1, o2) {
             return modifier * sorterFn.call(me, o1, o2);
         };
     },
-
+    
     /**
      * @private
      * Basic default sorter function that just compares the defined property of each object
@@ -144,7 +128,7 @@ Ext.define('Ext.util.Sorter', {
             transform = me.transform,
             v1 = me.getRoot(o1)[me.property],
             v2 = me.getRoot(o2)[me.property];
-
+            
         if (transform) {
             v1 = transform(v1);
             v2 = transform(v2);
@@ -152,7 +136,7 @@ Ext.define('Ext.util.Sorter', {
 
         return v1 > v2 ? 1 : (v1 < v2 ? -1 : 0);
     },
-
+    
     /**
      * @private
      * Returns the root property of the given item, based on the configured {@link #root} property
@@ -162,7 +146,7 @@ Ext.define('Ext.util.Sorter', {
     getRoot: function(item) {
         return this.root === undefined ? item : item[this.root];
     },
-
+    
     /**
      * Set the sorting direction for this sorter.
      * @param {String} direction The direction to sort in. Should be either 'ASC' or 'DESC'.
@@ -172,7 +156,7 @@ Ext.define('Ext.util.Sorter', {
         me.direction = direction ? direction.toUpperCase() : direction;
         me.updateSortFunction();
     },
-
+    
     /**
      * Toggles the sorting direction for this sorter.
      */
@@ -181,7 +165,7 @@ Ext.define('Ext.util.Sorter', {
         me.direction = Ext.String.toggle(me.direction, "ASC", "DESC");
         me.updateSortFunction();
     },
-
+    
     /**
      * Update the sort function for this sorter.
      * @param {Function} [fn] A new sorter function for this sorter. If not specified it will use the default
@@ -191,13 +175,5 @@ Ext.define('Ext.util.Sorter', {
         var me = this;
         fn = fn || me.sorterFn || me.defaultSorterFn;
         me.sort = me.createSortFunction(fn);
-    },
-
-    serialize: function() {
-        return {
-            root: this.root,
-            property: this.property,
-            direction: this.direction
-        };
     }
 });

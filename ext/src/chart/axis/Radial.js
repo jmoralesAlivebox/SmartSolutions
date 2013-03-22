@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * @private
  */
@@ -22,7 +5,7 @@ Ext.define('Ext.chart.axis.Radial', {
 
     /* Begin Definitions */
 
-    extend: 'Ext.chart.axis.Numeric',
+    extend: 'Ext.chart.axis.Abstract',
 
     /* End Definitions */
 
@@ -30,22 +13,11 @@ Ext.define('Ext.chart.axis.Radial', {
 
     alias: 'axis.radial',
 
-    /**
-     * @cfg {Number} maximum
-     * The maximum value drawn by the axis. If not set explicitly, the axis
-     * maximum will be calculated automatically.
-     */
-
-    /**
-     * @cfg {Number} [steps=10]
-     * The number of circles to draw outward from the center.
-     */
-
     drawAxis: function(init) {
         var chart = this.chart,
             surface = chart.surface,
             bbox = chart.chartBBox,
-            store = chart.getChartStore(),
+            store = chart.store,
             l = store.getCount(),
             centerX = bbox.x + (bbox.width / 2),
             centerY = bbox.y + (bbox.height / 2),
@@ -117,7 +89,7 @@ Ext.define('Ext.chart.axis.Radial', {
             series,
             surface = chart.surface,
             bbox = chart.chartBBox,
-            store = chart.getChartStore(),
+            store = chart.store,
             data = store.data.items,
             ln, record,
             centerX = bbox.x + (bbox.width / 2),
@@ -150,13 +122,12 @@ Ext.define('Ext.chart.axis.Radial', {
         //get maxValue to interpolate
         for (j = 0, ln = data.length; j < ln; j++) {
             record = data[j];
-            categories.push(record.get(xField));
-
             if (aggregate) {
                 for (i = 0, nfields = fields.length; i < nfields; i++) {
                     maxValue = max(+record.get(fields[i]), maxValue);
                 }
             }
+            categories.push(record.get(xField));
         }
         if (!this.labelArray) {
             if (display != 'categories') {
@@ -229,27 +200,5 @@ Ext.define('Ext.chart.axis.Radial', {
             }
         }
         this.labelArray = labelArray;
-    },
-
-    getRange: function () {
-        var range = this.callParent();
-        range.min = 0;  // Radial charts currently assume that the origin is always 0.
-        return range;
-    },
-
-    processView: function() {
-        var me = this,
-            seriesItems = me.chart.series.items,
-            i, ln, series, ends, fields = [];
-
-        for (i = 0, ln = seriesItems.length; i < ln; i++) {
-            series = seriesItems[i];
-            fields.push(series.yField);
-        }
-        me.fields = fields;
-
-        ends = me.calcEnds();
-        me.maximum = ends.to;
-        me.steps = ends.steps;
     }
 });

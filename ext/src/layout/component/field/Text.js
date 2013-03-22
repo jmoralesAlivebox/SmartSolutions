@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * Layout class for {@link Ext.form.field.Text} fields. Handles sizing the input field.
  * @private
@@ -29,10 +12,12 @@ Ext.define('Ext.layout.component.field.Text', {
     canGrowWidth: true,
 
     beginLayoutCycle: function(ownerContext) {
-        this.callParent(arguments);
+        var me = this;
+        
+        me.callParent(arguments);
         
         // Clear height, in case a previous layout cycle stretched it.
-        if (ownerContext.heightModel.shrinkWrap) {
+        if (ownerContext.shrinkWrap) {
             ownerContext.inputContext.el.setStyle('height', '');
         }
     },
@@ -77,17 +62,14 @@ Ext.define('Ext.layout.component.field.Text', {
             ieInputWidthAdjustment = me.ieInputWidthAdjustment;
 
         if (ieInputWidthAdjustment) {
-            me.adjustIEInputPadding(ownerContext);
+            // adjust for IE 6/7 strict content-box model
+            // RTL: This might have to be padding-left unless the senses of the padding styles switch when in RTL mode.
+            me.owner.bodyEl.setStyle('padding-right', ieInputWidthAdjustment + 'px');
             if(suffix === 'px') {
                 width -= ieInputWidthAdjustment;
             }
         }
 
         me.callParent(arguments);
-    },
-
-    adjustIEInputPadding: function(ownerContext) {
-        // adjust for IE 6/7 strict content-box model
-        this.owner.bodyEl.setStyle('padding-right', this.ieInputWidthAdjustment + 'px');
     }
 });

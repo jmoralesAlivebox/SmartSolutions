@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A custom HeaderContainer for the {@link Ext.grid.property.Grid}.
  * Generally it should not need to be used directly.
@@ -27,7 +10,7 @@ Ext.define('Ext.grid.property.HeaderContainer', {
     
     nameWidth: 115,
 
-    // @private strings used for locale support
+    // private - strings used for locale support
     //<locale>
     nameText : 'Name',
     //</locale>
@@ -44,7 +27,7 @@ Ext.define('Ext.grid.property.HeaderContainer', {
     falseText: 'false',
     //</locale>
 
-    // @private
+    // private
     nameColumnCls: Ext.baseCSSPrefix + 'grid-property-name',
 
     /**
@@ -58,8 +41,6 @@ Ext.define('Ext.grid.property.HeaderContainer', {
         me.grid = grid;
         me.store = store;
         me.callParent([{
-            enableColumnResize: Ext.isDefined(grid.enableColumnResize) ? grid.enableColumnResize : me.enableColumnResize,
-            enableColumnMove: Ext.isDefined(grid.enableColumnMove) ? grid.enableColumnMove : me.enableColumnMove,
             items: [{
                 header: me.nameText,
                 width: grid.nameColumnWidth || me.nameWidth,
@@ -87,18 +68,17 @@ Ext.define('Ext.grid.property.HeaderContainer', {
         return this.grid.getCellEditor(record, this);
     },
 
-    // @private
+    // private
     // Render a property name cell
     renderProp : function(v) {
         return this.getPropertyName(v);
     },
 
-    // @private
+    // private
     // Render a property value cell
     renderCell : function(val, meta, rec) {
         var me = this,
-            grid = me.grid,
-            renderer = grid.getConfig(rec.get(grid.nameField), 'renderer'),
+            renderer = me.grid.customRenderers[rec.get(me.grid.nameField)],
             result = val;
 
         if (renderer) {
@@ -112,17 +92,18 @@ Ext.define('Ext.grid.property.HeaderContainer', {
         return Ext.util.Format.htmlEncode(result);
     },
 
-    // @private
+    // private
     renderDate : Ext.util.Format.date,
 
-    // @private
+    // private
     renderBool : function(bVal) {
         return this[bVal ? 'trueText' : 'falseText'];
     },
 
-    // @private
+    // private
     // Renders custom property names instead of raw names if defined in the Grid
     getPropertyName : function(name) {
-        return this.grid.getConfig(name, 'displayName', name);
+        var pn = this.grid.propertyNames;
+        return pn && pn[name] ? pn[name] : name;
     }
 });

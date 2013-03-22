@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A subclass of Ext.dd.DragTracker which handles dragging any Component.
  *
@@ -68,7 +51,7 @@ Ext.define('Ext.util.ComponentDragger', {
             comp = me.comp;
 
         // Cache the start [X, Y] array
-        this.startPosition = comp.getXY();
+        this.startPosition = comp.el.getXY();
 
         // If client Component has a ghost method to show a lightweight version of itself
         // then use that as a drag proxy unless configured to liveDrag.
@@ -91,7 +74,6 @@ Ext.define('Ext.util.ComponentDragger', {
         var me = this,
             comp = me.comp,
             c = me.initialConstrainTo,
-            constrainEl,
             delegateRegion,
             elRegion,
             dragEl = me.proxy ? me.proxy.el : comp.el,
@@ -99,11 +81,7 @@ Ext.define('Ext.util.ComponentDragger', {
 
         // The configured constrainTo might be a Region or an element
         if (!(c instanceof Ext.util.Region)) {
-            constrainEl = Ext.fly(c);
-            c =  constrainEl.getViewRegion();
-
-            // Do not allow to move into vertical scrollbar
-            c.right = c.left + constrainEl.dom.clientWidth;
+            c =  Ext.fly(c).getViewRegion();
         }
 
         // Reduce the constrain region to allow for shadow
@@ -139,10 +117,6 @@ Ext.define('Ext.util.ComponentDragger', {
 
     onEnd: function(e) {
         var comp = this.comp;
-        if (comp.isDestroyed || comp.destroying) {
-            return;
-        }
-        
         if (this.proxy && !comp.liveDrag) {
             comp.unghost();
         }

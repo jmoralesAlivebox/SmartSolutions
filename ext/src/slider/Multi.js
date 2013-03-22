@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * Slider which supports vertical or horizontal orientation, keyboard adjustments, configurable snapping, axis clicking
  * and animation. Can be added as an item to any container.
@@ -54,9 +37,7 @@ Ext.define('Ext.slider.Multi', {
 
     // note: {id} here is really {inputId}, but {cmpId} is available
     fieldSubTpl: [
-        '<div id="{id}" class="' + Ext.baseCSSPrefix + 'slider {fieldCls} {vertical}',
-        '{childElCls}',
-        '" aria-valuemin="{minValue}" aria-valuemax="{maxValue}" aria-valuenow="{value}" aria-valuetext="{value}">',
+        '<div id="{id}" class="' + Ext.baseCSSPrefix + 'slider {fieldCls} {vertical}" aria-valuemin="{minValue}" aria-valuemax="{maxValue}" aria-valuenow="{value}" aria-valuetext="{value}">',
             '<div id="{cmpId}-endEl" class="' + Ext.baseCSSPrefix + 'slider-end" role="presentation">',
                 '<div id="{cmpId}-innerEl" class="' + Ext.baseCSSPrefix + 'slider-inner" role="presentation">',
                     '{%this.renderThumbs(out, values)%}',
@@ -82,8 +63,6 @@ Ext.define('Ext.slider.Multi', {
             disableFormats: true
         }
     ],
-    
-    horizontalProp: 'left',
 
     /**
      * @cfg {Number} value
@@ -379,8 +358,7 @@ Ext.define('Ext.slider.Multi', {
             vertical: me.vertical ? Ext.baseCSSPrefix + 'slider-vert' : Ext.baseCSSPrefix + 'slider-horz',
             minValue: me.minValue,
             maxValue: me.maxValue,
-            value: me.value,
-            childElCls: ''
+            value: me.value
         });
     },
 
@@ -412,9 +390,6 @@ Ext.define('Ext.slider.Multi', {
             keydown  : me.onKeyDown
         });
     },
-    
-    onDragStart: Ext.emptyFn,
-    onDragEnd: Ext.emptyFn,
 
     /**
      * @private
@@ -426,24 +401,21 @@ Ext.define('Ext.slider.Multi', {
      */
     getTrackpoint : function(xy) {
         var me = this,
-            vertical = me.vertical,
+            result,
+            positionProperty,
             sliderTrack = me.innerEl,
-            trackLength, result,
-            positionProperty;
+            trackLength;
 
-        if (vertical) {
+        if (me.vertical) {
             positionProperty = 'top';
             trackLength = sliderTrack.getHeight();
         } else {
-            positionProperty = me.horizontalProp;
+            positionProperty = 'left';
             trackLength = sliderTrack.getWidth();
         }
-        xy = me.transformTrackPoints(sliderTrack.translatePoints(xy));
-        result = Ext.Number.constrain(xy[positionProperty], 0, trackLength);
-        return vertical ? trackLength - result : result;
+        result = Ext.Number.constrain(sliderTrack.translatePoints(xy)[positionProperty], 0, trackLength);
+        return me.vertical ? trackLength - result : result;
     },
-    
-    transformTrackPoints: Ext.identityFn,
 
     /**
      * @private
@@ -507,7 +479,7 @@ Ext.define('Ext.slider.Multi', {
     getNearest: function(trackPoint) {
         var me = this,
             clickValue = me.reversePixelValue(trackPoint),
-            nearestDistance = me.getRange() + 5, //add a small fudge for the end of the slider
+            nearestDistance = (me.maxValue - me.minValue) + 5, //add a small fudge for the end of the slider
             nearest = null,
             thumbs = me.thumbs,
             i = 0,
@@ -637,40 +609,14 @@ Ext.define('Ext.slider.Multi', {
     /**
      * Programmatically sets the value of the Slider. Ensures that the value is constrained within the minValue and
      * maxValue.
-     * 
-     * Setting a single value:
-     *     // Set the second slider value, don't animate
-     *     mySlider.setValue(1, 50, false);
-     * 
-     * Setting multiple values at once
-     *     // Set 3 thumb values, animate
-     *     mySlider.setValue([20, 40, 60], true);
-     * 
-     * @param {Number/Number[]} index Index of the thumb to move. Alternatively, it can be an array of values to set
-     * for each thumb in the slider.
+     * @param {Number} index Index of the thumb to move
      * @param {Number} value The value to set the slider to. (This will be constrained within minValue and maxValue)
      * @param {Boolean} [animate=true] Turn on or off animation
-     * @return {Ext.slider.Multi} this
      */
     setValue : function(index, value, animate, changeComplete) {
         var me = this,
-            thumbs = me.thumbs,
-            thumb, len, i, values;
-            
-        if (Ext.isArray(index)) {
-            values = index;
-            animate = value;
-            
-            for (i = 0, len = values.length; i < len; ++i) {
-                thumb = thumbs[i];
-                if (thumb) {
-                    me.setValue(i, values[i], animate);
-                }    
-            }
-            return me;
-        }
+            thumb = me.thumbs[index];
 
-        thumb = me.thumbs[index];
         // ensures value is contstrained and snapped
         value = me.normalizeValue(value);
 
@@ -693,7 +639,6 @@ Ext.define('Ext.slider.Multi', {
                 }
             }
         }
-        return me;
     },
 
     /**
@@ -701,16 +646,7 @@ Ext.define('Ext.slider.Multi', {
      * Given a value within this Slider's range, calculates a Thumb's percentage CSS position to map that value.
      */
     calculateThumbPosition : function(v) {
-        var me = this,
-            minValue = me.minValue,
-            pos = (v - minValue) / me.getRange() * 100;
-
-        // If the total number of records is <= pageSize then return minValue.
-        if (isNaN(pos)) {
-            pos = minValue;
-        }
-
-        return pos;
+        return (v - this.minValue) / (this.maxValue - this.minValue) * 100;
     },
 
     /**
@@ -721,15 +657,9 @@ Ext.define('Ext.slider.Multi', {
      */
     getRatio : function() {
         var me = this,
-            innerEl = me.innerEl,
-            trackLength = me.vertical ? innerEl.getHeight() : innerEl.getWidth(),
-            valueRange = me.getRange();
-            
+            trackLength = this.vertical ? this.innerEl.getHeight() : this.innerEl.getWidth(),
+            valueRange = this.maxValue - this.minValue;
         return valueRange === 0 ? trackLength : (trackLength / valueRange);
-    },
-    
-    getRange: function(){
-        return this.maxValue - this.minValue;
     },
 
     /**
@@ -753,7 +683,7 @@ Ext.define('Ext.slider.Multi', {
      * @return {Number} The mapped value for the given position
      */
     reversePercentageValue : function(pos) {
-        return this.minValue + this.getRange() * (pos / 100);
+        return this.minValue + (this.maxValue - this.minValue) * (pos / 100);
     },
 
     //private

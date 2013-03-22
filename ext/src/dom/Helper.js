@@ -1,24 +1,7 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 //@tag dom,core
 //@define Ext.DomHelper
-
 //@define Ext.core.DomHelper
+//@require Ext.dom.AbstractElement-traversal
 
 /**
  * @class Ext.DomHelper
@@ -154,7 +137,7 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  *     Ext.DomHelper.useDom = true; // force it to use DOM; reduces performance
  *
  */
-Ext.define('Ext.dom.Helper', (function() {
+(function() {
 
 // kill repeat to save bytes
 var afterbegin = 'afterbegin',
@@ -182,23 +165,19 @@ var afterbegin = 'afterbegin',
     };
 
 /**
- * @class Ext.dom.Helper
- * @extends Ext.dom.AbstractHelper
- * @requires Ext.dom.AbstractElement
- * 
  * The actual class of which {@link Ext.DomHelper} is instance of.
  * 
  * Use singleton {@link Ext.DomHelper} instead.
  * 
  * @private
  */
-return {
+Ext.define('Ext.dom.Helper', {
     extend: 'Ext.dom.AbstractHelper',
     requires:['Ext.dom.AbstractElement'],
 
-    tableRe: /^(?:table|thead|tbody|tr|td)$/i,
+    tableRe: /^table|tbody|tr|td$/i,
 
-    tableElRe: /td|tr|tbody|thead/i,
+    tableElRe: /td|tr|tbody/i,
 
     /**
      * @property {Boolean} useDom
@@ -272,13 +251,10 @@ return {
         ns = el.nextSibling;
 
         if (ns) {
-            ns = el;
             el = document.createDocumentFragment();
-            
             while (ns) {
-                 nx = ns.nextSibling;
-                 el.appendChild(ns);
-                 ns = nx;
+                el.appendChild(ns);
+                ns = ns.nextSibling;
             }
         }
         return el;
@@ -309,7 +285,7 @@ return {
 
         if (tag == 'td' || (tag == 'tr' && (be || ab))) {
             node = this.ieTable(4, trs, html, tre);
-        } else if (((tag == 'tbody' || tag == 'thead') && (be || ab)) ||
+        } else if ((tag == 'tbody' && (be || ab)) ||
                 (tag == 'tr' && (bb || ae))) {
             node = this.ieTable(3, tbs, html, tbe);
         } else {
@@ -340,6 +316,7 @@ return {
 
     applyStyles: function(el, styles) {
         if (styles) {
+            el = Ext.fly(el);
             if (typeof styles == "function") {
                 styles = styles.call();
             }
@@ -347,7 +324,7 @@ return {
                 styles = Ext.dom.Element.parseStyles(styles);
             }
             if (typeof styles == "object") {
-                Ext.fly(el, '_applyStyles').setStyle(styles);
+                el.setStyle(styles);
             }
         }
     },
@@ -429,16 +406,7 @@ return {
             }
 
             if ((hashVal = fullPositionHash[where])) {
-
-                if (Ext.global.MSApp && Ext.global.MSApp.execUnsafeLocalFunction) {
-                    //ALLOW MS TO EXECUTE THIS CODE FOR NATIVE WINDOWS 8 DESKTOP APPS
-                    MSApp.execUnsafeLocalFunction(function () {
-                        el.insertAdjacentHTML(hashVal[0], html);
-                    });
-                } else {
-                    el.insertAdjacentHTML(hashVal[0], html);
-                }
-
+                el.insertAdjacentHTML(hashVal[0], html);
                 return el[hashVal[1]];
             }
             // if (not IE and context element is an HTMLElement) or TextNode
@@ -501,8 +469,10 @@ return {
         return new Ext.Template(html);
     }
 
-};
-})(), function() {
+}, function() {
     Ext.ns('Ext.core');
     Ext.DomHelper = Ext.core.DomHelper = new this;
 });
+
+
+}());

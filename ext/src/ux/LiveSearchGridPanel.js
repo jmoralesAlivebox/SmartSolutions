@@ -1,5 +1,7 @@
 /**
- * A GridPanel class with live search support.
+ * @class Ext.ux.LiveSearchGridPanel
+ * @extends Ext.grid.Panel
+ * <p>A GridPanel class with live search support.</p>
  * @author Nicolas Ferrero
  */
 Ext.define('Ext.ux.LiveSearchGridPanel', {

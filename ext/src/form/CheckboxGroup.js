@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * A {@link Ext.form.FieldContainer field container} which has a specialized layout for arranging
  * {@link Ext.form.field.Checkbox} controls into columns, and provides convenience
@@ -134,8 +117,6 @@ Ext.define('Ext.form.CheckboxGroup', {
     // private
     layout: 'checkboxgroup',
 
-    componentCls: Ext.baseCSSPrefix + 'form-checkboxgroup',
-
     initComponent: function() {
         var me = this;
         me.callParent();
@@ -162,34 +143,18 @@ Ext.define('Ext.form.CheckboxGroup', {
      * @param {Object} field
      * @protected
      */
-    onAdd: function(item) {
-        var me = this,
-            items,
-            len, i;
-
-        if (item.isCheckbox) {
-            me.mon(item, 'change', me.checkChange, me);
-        } else if (item.isContainer) {
-            items = item.items.items;
-            for (i = 0, len = items.length; i < len; i++) {
-                me.onAdd(items[i]);
-            }
+    onFieldAdded: function(field) {
+        var me = this;
+        if (field.isCheckbox) {
+            me.mon(field, 'change', me.checkChange, me);
         }
         me.callParent(arguments);
     },
 
-    onRemove: function(item) {
-        var me = this,
-            items,
-            len, i;
-
-        if (item.isCheckbox) {
-            me.mun(item, 'change', me.checkChange, me);
-        } else if (item.isContainer) {
-            items = item.items.items;
-            for (i = 0, len = items.length; i < len; i++) {
-                me.onRemove(items[i]);
-            }
+    onFieldRemoved: function(field) {
+        var me = this;
+        if (field.isCheckbox) {
+            me.mun(field, 'change', me.checkChange, me);
         }
         me.callParent(arguments);
     },
@@ -453,7 +418,7 @@ Ext.define('Ext.form.CheckboxGroup', {
         } else {
             errors = me.getErrors();
             isValid = Ext.isEmpty(errors);
-            wasValid = me.wasValid;
+            wasValid = !me.hasActiveError();
             if (isValid) {
                 me.unsetActiveError();
             } else {
@@ -461,7 +426,6 @@ Ext.define('Ext.form.CheckboxGroup', {
             }
         }
         if (isValid !== wasValid) {
-            me.wasValid = isValid;
             me.fireEvent('validitychange', me, isValid);
             me.updateLayout();
         }

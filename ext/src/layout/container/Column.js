@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * This is the layout style of choice for creating structural layouts in a multi-column format where the width of each
  * column can be specified as a percentage or fixed width, but the height is allowed to vary based on the content. This
@@ -83,7 +66,7 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  */
 Ext.define('Ext.layout.container.Column', {
 
-    extend: 'Ext.layout.container.Auto',
+    extend: 'Ext.layout.container.Container',
     alias: ['layout.column'],
     alternateClassName: 'Ext.layout.ColumnLayout',
 
@@ -95,53 +78,75 @@ Ext.define('Ext.layout.container.Column', {
 
     // Columns with a columnWidth have their width managed.
     columnWidthSizePolicy: {
-        readsWidth: 0,
-        readsHeight: 1,
         setsWidth: 1,
         setsHeight: 0
     },
-    
-    createsInnerCt: true,
 
-    manageOverflow: true,
-    
-    isItemShrinkWrap: function(ownerContext){
-        return true;
-    },
+    childEls: [
+        'innerCt'
+    ],
 
-    getItemSizePolicy: function (item, ownerSizeModel) {
+    manageOverflow: 2,
+
+    renderTpl: [
+        '<div id="{ownerId}-innerCt" class="',Ext.baseCSSPrefix,'column-inner">',
+            '{%this.renderBody(out,values)%}',
+            '<div class="',Ext.baseCSSPrefix,'clear"></div>',
+        '</div>',
+        '{%this.renderPadder(out,values)%}'
+    ],
+
+    getItemSizePolicy: function (item) {
         if (item.columnWidth) {
-            if (!ownerSizeModel) {
-                ownerSizeModel = this.owner.getSizeModel();
-            }
-
-            if (!ownerSizeModel.width.shrinkWrap) {
-                return this.columnWidthSizePolicy;
-            }
+            return this.columnWidthSizePolicy;
         }
         return this.autoSizePolicy;
     },
 
-    calculateItems: function (ownerContext, containerSize) {
+    beginLayout: function() {
+        this.callParent(arguments);
+        this.innerCt.dom.style.width = '';
+    },
+
+    calculate: function (ownerContext) {
         var me = this,
-            targetContext = ownerContext.targetContext,
+            containerSize = me.getContainerSize(ownerContext),
+            state = ownerContext.state;
+
+        if (state.calculatedColumns || (state.calculatedColumns = me.calculateColumns(ownerContext))) {
+            if (me.calculateHeights(ownerContext)) {
+                me.calculateOverflow(ownerContext, containerSize);
+                return;
+            }
+        }
+
+        me.done = false;
+    },
+
+    calculateColumns: function (ownerContext) {
+        var me = this,
+            containerSize = me.getContainerSize(ownerContext),
+            innerCtContext = ownerContext.getEl('innerCt', me),
             items = ownerContext.childItems,
             len = items.length,
             contentWidth = 0,
-            gotWidth = containerSize.gotWidth,
             blocked, availableWidth, i, itemContext, itemMarginWidth, itemWidth;
 
+        // Can never decide upon necessity of vertical scrollbar (and therefore, narrower
+        // content width) until the component layout has published a height for the target
+        // element.
+        if (!ownerContext.heightModel.shrinkWrap && !ownerContext.targetContext.hasProp('height')) {
+            return false;
+        }
+
         // No parallel measurement, cannot lay out boxes.
-        if (gotWidth === false) { //\\ TODO: Deal with target padding width
-            // TODO: only block if we have items with columnWidth
-            targetContext.domBlock(me, 'width');
+        if (!containerSize.gotWidth) { //\\ TODO: Deal with target padding width
+            ownerContext.targetContext.block(me, 'width');
             blocked = true;
-        } else if (gotWidth) {
-            availableWidth = containerSize.width;
         } else {
-            // gotWidth is undefined, which means we must be width shrink wrap.
-            // cannot calculate columnWidths if we're shrink wrapping.
-            return true;
+            availableWidth = containerSize.width;
+
+            innerCtContext.setWidth(availableWidth);
         }
 
         // we need the widths of the columns we don't manage to proceed so we block on them
@@ -179,25 +184,51 @@ Ext.define('Ext.layout.container.Column', {
                 }
             }
 
-            ownerContext.setContentWidth(contentWidth + ownerContext.paddingContext.getPaddingInfo().width);
+            ownerContext.setContentWidth(contentWidth);
         }
 
         // we registered all the values that block this calculation, so abort now if blocked...
         return !blocked;
     },
 
-    setCtSizeIfNeeded: function(ownerContext, containerSize) {
+    calculateHeights: function (ownerContext) {
         var me = this,
-            padding = ownerContext.paddingContext.getPaddingInfo();
+            items = ownerContext.childItems,
+            len = items.length,
+            blocked, i, itemContext;
 
-        me.callParent(arguments);
+        // in order for innerCt to have the proper height, all the items must have height
+        // correct in the DOM...
+        blocked = false;
+        for (i = 0; i < len; ++i) {
+            itemContext = items[i];
 
-        // IE6/7/quirks lose right padding when using the shrink wrap template, so
-        // reduce the size of the outerCt by the amount of right padding.
-        if ((Ext.isIEQuirks || Ext.isIE7m) && me.isShrinkWrapTpl && padding.right) {
-            ownerContext.outerCtContext.setProp('width',
-                containerSize.width + padding.left);
+            if (!itemContext.hasDomProp('height')) {
+                itemContext.domBlock(me, 'height');
+                blocked = true;
+            }
         }
-    }
 
+        if (!blocked) {
+            ownerContext.setContentHeight(me.innerCt.getHeight() + ownerContext.targetContext.getPaddingInfo().height);
+        }
+
+        return !blocked;
+    },
+
+    finishedLayout: function (ownerContext) {
+        var bc = ownerContext.bodyContext;
+
+        // Owner may not have a body - this seems to only be needed for Panels.
+        if (bc && (Ext.isIE6 || Ext.isIE7 || Ext.isIEQuirks)) {
+            // Fix for https://sencha.jira.com/browse/EXTJSIV-4979
+            bc.el.repaint();
+        }
+
+        this.callParent(arguments);
+    },
+
+    getRenderTarget : function() {
+        return this.innerCt;
+    }
 });

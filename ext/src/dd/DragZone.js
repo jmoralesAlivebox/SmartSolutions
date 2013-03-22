@@ -1,20 +1,3 @@
-/*
-This file is part of Ext JS 4.2
-
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
-*/
 /**
  * This class provides a container DD instance that allows dragging of multiple child source nodes.
  *
@@ -82,17 +65,9 @@ Ext.define('Ext.dd.DragZone', {
      * @param {Object} config
      */
     constructor : function(el, config){
-        var me = this,
-            scroll = me.containerScroll;
-        
-        me.callParent([el, config]);
-        if (scroll) {
-            el = me.scrollEl || el;
-            el = Ext.get(el);
-            if (Ext.isObject(scroll)) {
-                el.ddScrollConfig = scroll;
-            }
-            Ext.dd.ScrollManager.register(el);
+        this.callParent([el, config]);
+        if (this.containerScroll) {
+            Ext.dd.ScrollManager.register(this.el);
         }
     },
 
@@ -104,15 +79,8 @@ Ext.define('Ext.dd.DragZone', {
      */
 
     /**
-     * @cfg {Object/Boolean} containerScroll
+     * @cfg {Boolean} containerScroll
      * True to register this container with the Scrollmanager for auto scrolling during drag operations.
-     * A {@link Ext.dd.ScrollManager} configuration may also be passed.
-     */
-    
-    /**
-     * @cfg {String/HTMLElement/Ext.dom.Element} scrollEl
-     * An element to register with the ScrollManager if {@link #containerScroll}
-     * is set. Defaults to the drag element.
      */
 
     /**
@@ -141,6 +109,18 @@ Ext.define('Ext.dd.DragZone', {
     },
 
     /**
+     * Called after a repair of an invalid drop. By default, highlights this.dragData.ddel
+     * @template
+     */
+    afterRepair : function(){
+        var me = this;
+        if (Ext.enableFx) {
+            Ext.fly(me.dragData.ddel).highlight(me.repairHighlightColor);
+        }
+        me.dragging = false;
+    },
+
+    /**
      * Called before a repair of an invalid drop to get the XY to animate to. By default returns the XY of
      * this.dragData.ddel
      * @param {Event} e The mouse up event
@@ -154,7 +134,7 @@ Ext.define('Ext.dd.DragZone', {
     destroy : function(){
         this.callParent();
         if (this.containerScroll) {
-            Ext.dd.ScrollManager.unregister(this.scrollEl || this.el);
+            Ext.dd.ScrollManager.unregister(this.el);
         }
     }
 });
