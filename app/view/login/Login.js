@@ -20,7 +20,7 @@ Ext.define('SmartSolutions.view.login.Login', {
                 xtype: 'textfield',
                 itemId: 'txtUsername',
                 width: 184,
-                value: 'Username'
+                emptyText: 'Username'
             },
             {
                 xtype: 'container',
@@ -32,7 +32,7 @@ Ext.define('SmartSolutions.view.login.Login', {
                     {
                         xtype: 'textfield',
                         itemId: 'txtPassword',
-                        value: 'Password'
+                        emptyText: 'Password'
                     },
                     {
                         xtype: 'button',

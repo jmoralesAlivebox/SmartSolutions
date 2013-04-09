@@ -19,5 +19,4 @@ Ext.define('SmartSolutions.model.ImageItem', {
         }
     ]
 
-
 });

@@ -14,6 +14,11 @@
             "id":3,
             "name":"Networking",
             "imageSource":"resources/images/categories/Networking.jpg"
+        },
+        {
+            "id":4,
+            "name":"Create",
+            "imageSource":"resources/images/categories/Create.jpg"
         }
     ]
 }

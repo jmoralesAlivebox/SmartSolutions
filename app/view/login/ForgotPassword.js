@@ -2,7 +2,6 @@ Ext.define("SmartSolutions.view.login.ForgotPassword", {
 
     extend: 'Ext.window.Window',
     alias: 'widget.forgotPassword',
-
     height: 200,
     width: 400,
     layout: {
@@ -20,7 +19,7 @@ Ext.define("SmartSolutions.view.login.ForgotPassword", {
             {
                 xtype: 'textfield',
                 itemId: 'txtEmail',
-                value: 'Email',
+                emptyText: 'Email',
                 width: 300
             },
             {

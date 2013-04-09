@@ -15,7 +15,7 @@ Ext.define('SmartSolutions.controller.login.RegisterController', {
     },
 
     createUser: function(){
-        alert('Create User');
+        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'categoriesView');
     }
 
 });

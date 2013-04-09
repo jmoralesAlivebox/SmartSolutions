@@ -1,0 +1,38 @@
+@import '../main/defaults.scss';
+
+.x-image-view {
+  padding-right: 10px;
+  padding-top: 10px;
+}
+
+.x-image-view .thumb {
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 2px;
+}
+
+.x-image-view .thumb-wrap {
+  float: left;
+  background-color: $localbackgroundcolor;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+.x-image-view .thumb-wrap span {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  color: $whitetextcolor;
+  font-size: 18px;
+}
+
+.x-image-view .x-item-selected .thumb {
+  background: $redselectedcolor !important;
+}
+
+.x-image-view .x-item-over .thumb {
+  background: $grayovercolor;
+}
+

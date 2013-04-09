@@ -1,7 +1,14 @@
 $theme-name: 'theme';
 
 // Windows Classic gray
-//$base-color: #D4D0C8;
+//$base-color: #ff0000;
 
+@import 'views/main/defaults';
 @import 'compass';
 @import 'ext4/default/all';
+@import 'views/categories/categoriesview';
+@import 'views/categories/solutionsview';
+@import 'views/categories/newsolutionview';
+@import 'views/categories/searchview';
+@import 'views/categories/categorieslistview';
+@import 'views/main/header';

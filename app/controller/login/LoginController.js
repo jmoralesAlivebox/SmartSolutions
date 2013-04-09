@@ -16,13 +16,8 @@ Ext.define('SmartSolutions.controller.login.LoginController', {
         });
     },
 
-    showRegisterPage: function(){
-
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'register');
-    },
-
     validateLogin: function(){
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'categoriesView');
+        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
     },
 
     forgotPassword: function(){

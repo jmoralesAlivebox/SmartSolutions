@@ -12,17 +12,21 @@ Ext.syncRequire([
 Ext.application({
 
     requires: [
-        'SmartSolutions.defaults.Constants'
+        'SmartSolutions.defaults.Constants',
+        'SmartSolutions.view.categories.SolutionsView'
     ],
 
     name:'SmartSolutions',
 
 
     controllers: [
+        'MainController',
         'login.LoginController',
         'login.RegisterController',
         'login.ForgotPasswordController',
-        'categories.MainCategoriesController'
+        'categories.MainCategoriesController',
+        'categories.CreateSolutionController',
+        'categories.SearchController'
     ],
 
     autoCreateViewport:false,

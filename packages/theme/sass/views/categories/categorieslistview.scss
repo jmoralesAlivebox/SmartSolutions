@@ -1,0 +1,10 @@
+@import '../main/defaults.scss';
+
+.x-list-view{
+  background-color: $graybackgroundcolor;
+  width: 15%;
+  min-height: 1200px;
+  font-size: 16px;
+  padding-left: 20px;
+  padding-top: 5px;
+}

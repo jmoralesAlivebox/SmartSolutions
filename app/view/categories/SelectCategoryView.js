@@ -19,7 +19,10 @@ Ext.define('SmartSolutions.view.categories.SelectCategoryView', {
                 xtype: 'categoriesview',
                 itemId: 'categoriesview',
                 store: 'CategoryItems',
-                imageViewSelectionMode: SmartSolutions.defaults.Constants.IMAGE_VIEW_SELECTION_MODE_SINGLE,
+                width: 600,
+                height: 600,
+                allowDeselect: true,
+                imageViewSelectionMode: SmartSolutions.defaults.Constants.IMAGE_VIEW_SELECTION_MODE_SIMPLE,
                 listeners: {
                     scope: this,
                     select: this.onCategorySelectionHandler
@@ -30,7 +33,10 @@ Ext.define('SmartSolutions.view.categories.SelectCategoryView', {
                 text: 'My First Solution',
                 height: 100,
                 width: 600,
-                style: 'font-size: 80px;'
+                listeners: {
+                    scope: this,
+                    click: this.onNewSolution
+                }
             }
         ];
         this.callParent(arguments);
@@ -38,6 +44,10 @@ Ext.define('SmartSolutions.view.categories.SelectCategoryView', {
 
     onCategorySelectionHandler: function(argImageView, argRecord){
         this.fireEvent('categorySelected', argRecord.data);
+    },
+
+    onNewSolution: function(){
+        this.fireEvent('openNewSolutionView');
     }
 
 });
