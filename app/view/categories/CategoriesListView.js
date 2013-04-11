@@ -7,10 +7,22 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
     initComponent:function () {
         this.items = [
             {
-                xtype: 'label',
-                text: 'Categories',
-                style : 'font-size: 20px;',
-                margin: {top:20}
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                items:[
+                    {
+                        xtype: 'image',
+                        src: 'resources/images/icons/categories.png',
+                        margin: {right: 10, top: 15}
+                    },
+                    {
+                        xtype: 'label',
+                        text: 'All Categories',
+                        cls: 'x-list-view-txt'
+                    }
+                ]
             },
             {
                 xtype: 'gridpanel',
@@ -24,6 +36,8 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
             },
             {
                 xtype: 'button',
+                cls: 'x-list-view-button',
+                overCls: 'hover-button',
                 text: 'Add Category',
                 margin: {top:15},
                 listeners: {
@@ -43,11 +57,13 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
                     {
                         xtype: 'textfield',
                         itemId: 'txtCategoryName',
+                        fieldCls: 'x-list-view-forms',
                         emptyText: 'Category'
                     },
                     {
                         xtype: 'button',
                         itemId: 'btnAdd',
+                        cls: 'x-list-view-button',
                         text: 'Add',
                         listeners: {
                             scope: this,

@@ -1,0 +1,17 @@
+@import '../main/defaults';
+
+.search-view-form {
+  color: $formsfontcolor;
+  background-image: none;
+  background-color: $formsbackgroundcolor;
+  border-radius: 4px;
+}
+
+.search-view-form .x-form-item-body input{
+  height: 30px;
+}
+
+.search-view-form-margins{
+  margin-top: 30px;
+  margin-left: 20px;
+}

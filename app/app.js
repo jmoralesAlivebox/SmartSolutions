@@ -13,7 +13,7 @@ Ext.application({
 
     requires: [
         'SmartSolutions.defaults.Constants',
-        'SmartSolutions.view.categories.SolutionsView'
+        'SmartSolutions.view.solutions.SolutionsView'
     ],
 
     name:'SmartSolutions',
@@ -25,8 +25,10 @@ Ext.application({
         'login.RegisterController',
         'login.ForgotPasswordController',
         'categories.MainCategoriesController',
-        'categories.CreateSolutionController',
-        'categories.SearchController'
+        'solutions.CreateSolutionController',
+        'solutions.YourSolutionsController',
+        'components.SearchController'
+
     ],
 
     autoCreateViewport:false,

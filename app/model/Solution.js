@@ -10,6 +10,10 @@ Ext.define('SmartSolutions.model.Solution', {
             type:'int'
         },
         {
+            name:'idCategory',
+            type:'int'
+        },
+        {
             name:'title',
             type:'string'
         },

@@ -1,0 +1,61 @@
+@import '../main/defaults';
+
+.x-new-solution-view{
+  padding: 40px;
+  padding-left: 50px;
+}
+
+.create-solution-view{
+  background-color: $localbackgroundcolor;
+  width: 60%;
+  margin-left: 20%;
+  min-height: 1200px;
+}
+
+.x-new-solution-save{
+  background-color: white;
+  width: 100%;
+  height: 50px;
+  font-size: 30px;
+  padding-left: 40px;
+  padding-top: 5px;
+  color: $titlescolor;
+}
+
+.new-solution-view-button {
+  border-radius: 4px;
+  margin-left: 10px;
+  margin-top: 5px;
+  height: 30px;
+  width: 55px;
+  background: $buttonbackgroundcolor;
+  color: white;
+}
+
+.new-solution-view-button .x-btn-center span {
+  color: $whitetextcolor;
+  font-weight:900;
+  font-size: 12px;
+}
+
+.new-solution-view-forms{
+  color: $formsfontcolor;
+  background-image: none;
+  background-color: $formsbackgroundcolor;
+  border-radius: 4px;
+}
+
+.new-solution-view-forms .x-form-item-body input{
+  height: 30px;
+}
+
+.new-solution-view-txt {
+  color: $titlescolor;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+new-solution-view-list{
+  color: $titlescolor;
+}
+

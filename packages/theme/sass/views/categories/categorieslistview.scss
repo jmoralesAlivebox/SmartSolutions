@@ -1,10 +1,42 @@
 @import '../main/defaults.scss';
 
 .x-list-view{
-  background-color: $graybackgroundcolor;
-  width: 15%;
+  background-color: $globalbackgroundcolor;
+  width: 25%;
   min-height: 1200px;
   font-size: 16px;
   padding-left: 20px;
   padding-top: 5px;
+}
+
+.x-list-view-button {
+  border-radius: 4px;
+  margin-left: 10px;
+  margin-top: 5px;
+  height: 30px;
+  background: $buttonbackgroundcolor;
+}
+
+.x-list-view-button .x-btn-center span {
+  color:$whitetextcolor;
+  font-weight:900;
+  font-size: 12px;
+}
+
+.x-list-view-forms{
+  color: $formsfontcolor;
+  background-image: none;
+  background-color: $formsbackgroundcolor;
+  border-radius: 4px;
+}
+
+.x-list-view-forms .x-form-item-body input{
+  height: 30px;
+}
+
+.x-list-view-txt {
+  color: $whitetextcolor;
+  font-size: 14px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }

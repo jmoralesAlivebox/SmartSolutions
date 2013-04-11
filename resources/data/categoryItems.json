@@ -2,23 +2,27 @@
     "data":[
         {
             "id":1,
-            "name":"Programming",
-            "imageSource":"resources/images/categories/Programming.jpg"
+            "name":"Programming"
         },
         {
             "id":2,
-            "name":"Databases",
-            "imageSource":"resources/images/categories/Databases.png"
+            "name":"Databases"
         },
         {
             "id":3,
-            "name":"Networking",
-            "imageSource":"resources/images/categories/Networking.jpg"
+            "name":"Networking"
         },
         {
             "id":4,
-            "name":"Create",
-            "imageSource":"resources/images/categories/Create.jpg"
+            "name":"Web Pages"
+        },
+        {
+            "id":5,
+            "name":"Design"
+        },
+        {
+            "id":6,
+            "name":"New"
         }
     ]
 }

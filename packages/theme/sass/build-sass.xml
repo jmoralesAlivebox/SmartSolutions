@@ -21,7 +21,10 @@
 
     <target name="removeUnusedCssFiles" >
         <delete includeemptydirs="true" >
-            <fileset dir="../../../resources/theme" includes="**/*" excludes="app.css" />
+            <fileset dir="../../../resources/theme" includes="**/*" >
+                <exclude name="app.css" />
+                <exclude name="**/images/**" />
+            </fileset>
         </delete>
     </target>
 

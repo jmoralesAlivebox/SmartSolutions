@@ -12,10 +12,6 @@ Ext.define('SmartSolutions.model.ImageItem', {
         {
             name:'name',
             type:'string'
-        },
-        {
-            name:'imageSource',
-            type:'string'
         }
     ]
 

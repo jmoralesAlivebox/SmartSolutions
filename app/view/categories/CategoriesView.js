@@ -13,12 +13,11 @@ Ext.define('SmartSolutions.view.categories.CategoriesView', {
 
     tpl: [
         '<tpl for=".">',
-        '<div class="thumb-wrap">',
-        '<div class="thumb">',
-        '<img id="{id}" src="{imageSource}" title="{name}">',
-        '</div>',
-        '<span>{name}</span>',
-        '</div>',
+            '<div class="thumb-wrap">',
+                '<div class="thumb">',
+                    '<span id="{id}">{name}</span>',
+                '</div>',
+            '</div>',
         '</tpl>'
     ],
 

@@ -3,21 +3,28 @@ Ext.define('SmartSolutions.view.login.LoginRegister', {
     extend:'Ext.container.Container',
     xtype:'loginRegister',
     alias: 'widget.loginRegister',
-    layout: {
-        type: 'vbox',
-        align:'center',
-        defaultMargins: {top: 100, bottom: 5}
-    },
+    cls: 'login-view',
 
     initComponent:function () {
         this.items = [
             {
+                xtype:'container',
+                cls: 'login-header'
+            },
+            {
                 xtype: 'login'
             },
             {
-                xtype: 'register',
-                margin: {top:-50}
-
+                xtype: 'container',
+                border: '1 0 0 0',
+                style: {
+                    borderColor: '#DADAD5',
+                    borderStyle: 'solid'
+                },
+                cls: 'login-line-container'
+            },
+            {
+                xtype: 'register'
             }
         ];
         this.callParent(arguments);

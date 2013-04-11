@@ -3,12 +3,17 @@ $theme-name: 'theme';
 // Windows Classic gray
 //$base-color: #ff0000;
 
-@import 'views/main/defaults';
 @import 'compass';
 @import 'ext4/default/all';
+@import 'views/main/defaults';
+@import 'views/login/loginview';
+@import 'views/login/forgotPassword';
 @import 'views/categories/categoriesview';
-@import 'views/categories/solutionsview';
-@import 'views/categories/newsolutionview';
-@import 'views/categories/searchview';
+@import 'views/categories/selectcategoryview';
 @import 'views/categories/categorieslistview';
+@import 'views/solutions/solutionsview';
+@import 'views/solutions/newsolutionview';
+@import 'views/solutions/yoursolutionsview';
+@import 'views/components/searchview';
+@import 'views/main/main';
 @import 'views/main/header';

@@ -26,11 +26,11 @@
             },
             {
                 "name": "newSolutionView",
-                "package": "SmartSolutions.view.categories.CreateYourSolutionView"
+                "package": "SmartSolutions.view.solutions.CreateYourSolutionView"
             },
             {
                 "name": "yourSolutionsView",
-                "package": "SmartSolutions.view.categories.YourSolutionsView"
+                "package": "SmartSolutions.view.solutions.YourSolutionsView"
             }
         ]
 

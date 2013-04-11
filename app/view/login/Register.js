@@ -3,47 +3,53 @@ Ext.define('SmartSolutions.view.login.Register', {
     extend:'Ext.container.Container',
     xtype:'register',
     alias: 'widget.register',
-    layout: {
-        type: 'vbox',
-        align:'center',
-        defaultMargins: {top: 10, bottom: 5}
-    },
+    cls: 'register-view-container',
 
     initComponent:function () {
         this.items = [
             {
-                xtype: 'label',
-                text: 'New to SmartSolutions? Sign up',
-                style : 'font-size: 16px;'
-            },
-            {
-                xtype: 'textfield',
-                itemId: 'txtEmail',
-                width: 184,
-                emptyText: 'Email'
-            },
-            {
                 xtype: 'container',
+                cls: 'login-view-elements',
                 layout: {
                     type: 'hbox'
                 },
 
                 items: [
                     {
-                        xtype: 'textfield',
-                        itemId: 'txtPassword',
-                        emptyText: 'Password'
+                        xtype: 'label',
+                        text: 'New to SmartSolutions?',
+                        cls: 'login-view-titles'
                     },
                     {
-                        xtype: 'button',
-                        itemId: 'btnRegister',
-                        text: 'Sign up',
-                        margin: {left:10},
+                        xtype: 'box',
+                        cls: 'register-view-txt',
+                        margin: {left:15},
+                        autoEl: {
+                            tag: 'a',
+                            href: '#',
+                            html: 'Sign up'
+                        },
                         listeners: {
                             scope: this,
-                            click: this.onRegister
+                            render: function(c){
+                                c.getEl().on('click', this.onRegister, this, {stopEvent: true});
+                            }
                         }
                     }]
+            },
+            {
+                xtype: 'textfield',
+                fieldCls: 'login-view-forms',
+                cls: 'login-view-field',
+                itemId: 'txtEmail',
+                emptyText: 'Email'
+            },
+            {
+                xtype: 'textfield',
+                fieldCls: 'login-view-forms',
+                cls: 'login-view-field',
+                itemId: 'txtPassword',
+                emptyText: 'Password'
             }
         ];
         this.callParent(arguments);

@@ -8,26 +8,43 @@ Ext.define('SmartSolutions.view.Header', {
     initComponent:function () {
         this.items = [
         {
-            xtype: 'label',
-            text: 'SmartSolutions',
-            width: '85%'
+            xtype:'container',
+            cls: 'main-header-logo'
         },
         {
-            xtype: 'label',
-            text: 'Username'
-        },
-        {
-            xtype: 'image',
-            src: 'resources/images/icons/signOut.png',
-            height: 45,
-            width: 40,
-            margin: {left:20},
-            listeners: {
-                el: {
-                    scope: this,
-                    click: this.onSignOut
+            xtype: 'container',
+            cls: 'main-header-elements',
+            layout: {
+                type: 'hbox'
+            },
+            items: [
+                {
+                    xtype: 'label',
+                    text: 'username'
+                },
+                {
+                    xtype: 'image',
+                    cls: 'main-header-icons',
+                    src: 'resources/images/icons/Profile.png',
+                    listeners: {
+                        el: {
+                            scope: this,
+                            click: this.onUserProfile
+                        }
+                    }
+                },
+                {
+                    xtype: 'image',
+                    cls: 'main-header-icons',
+                    src: 'resources/images/icons/logout.png',
+                    listeners: {
+                        el: {
+                            scope: this,
+                            click: this.onSignOut
+                        }
+                    }
                 }
-            }
+            ]
         }
         ];
         this.callParent(arguments);
@@ -35,6 +52,9 @@ Ext.define('SmartSolutions.view.Header', {
 
     onSignOut: function(){
         this.fireEvent('signOut');
+    },
+    onUserProfile: function(){
+        this.fireEvent('userProfile');
     }
 
 });

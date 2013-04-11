@@ -3,27 +3,20 @@ Ext.define('SmartSolutions.view.login.Login', {
     extend:'Ext.container.Container',
     xtype:'login',
     alias: 'widget.login',
-    layout: {
-        type: 'vbox',
-        align:'center',
-        defaultMargins: {top: 10, bottom: 5}
-    },
+    cls: 'login-view-container',
 
     initComponent:function () {
         this.items = [
             {
-                xtype: 'label',
-                text: 'SmartSolutions',
-                style : 'font-size: 20px;'
-            },
-            {
                 xtype: 'textfield',
+                fieldCls: 'login-view-forms',
+                cls: 'login-view-field',
                 itemId: 'txtUsername',
-                width: 184,
                 emptyText: 'Username'
             },
             {
                 xtype: 'container',
+                cls: 'login-view-elements',
                 layout: {
                     type: 'hbox'
                 },
@@ -31,14 +24,18 @@ Ext.define('SmartSolutions.view.login.Login', {
                 items: [
                     {
                         xtype: 'textfield',
+                        fieldCls: 'login-view-forms',
+                        cls: 'login-view-short-field',
                         itemId: 'txtPassword',
-                        emptyText: 'Password'
+                        emptyText: 'Password',
+                        inputType:'password'
                     },
                     {
                         xtype: 'button',
                         itemId: 'btnLogin',
+                        cls: 'login-view-buttons',
+                        overCls: 'hover-button',
                         text: 'Sign in',
-                        margin: {left:10},
                         listeners: {
                             scope: this,
                             click: this.onLogin
@@ -47,6 +44,7 @@ Ext.define('SmartSolutions.view.login.Login', {
             },
             {
                 xtype: 'container',
+                cls: 'login-view-elements',
                 layout: {
                     type: 'hbox'
                 },
@@ -54,15 +52,22 @@ Ext.define('SmartSolutions.view.login.Login', {
                 items: [
                     {
                         xtype: 'checkboxfield',
-                        margin: {top:-4}
+                        cls: 'login-view-checkbox'
                     },
                     {
                         xtype: 'label',
-                        text: 'Remember me  |',
-                        margin: {left:6}
+                        cls: 'login-view-txt',
+                        text: 'Remember me'
+                    },
+                    {
+                        xtype: 'label',
+                        cls: 'login-view-txt',
+                        margin: {left:10},
+                        text: '|'
                     },
                     {
                         xtype: 'box',
+                        cls: 'login-view-txt',
                         margin: {left:10},
                         autoEl: {
                             tag: 'a',
