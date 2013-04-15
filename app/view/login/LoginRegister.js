@@ -8,10 +8,6 @@ Ext.define('SmartSolutions.view.login.LoginRegister', {
     initComponent:function () {
         this.items = [
             {
-                xtype:'container',
-                cls: 'login-header'
-            },
-            {
                 xtype: 'login'
             },
             {

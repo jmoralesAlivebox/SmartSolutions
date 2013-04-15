@@ -3,6 +3,9 @@
 .x-solution-view {
   padding-right: 10px;
   padding-top: 10px;
+  margin-left: 5%;
+  width: 85%;
+  height: 700px;
 }
 
 .x-solution-view .thumb {
@@ -21,7 +24,6 @@
 .x-solution-view .thumb-wrap span {
   display: block;
   overflow: hidden;
-  text-align: center;
 }
 
 .x-solution-view-title {
@@ -34,3 +36,9 @@
   color: $txtfontcolor;
 }
 
+hr{
+  color: $txtfontcolor;
+  background-color: #DADAD5;
+  height:1px;
+  border:none;
+}

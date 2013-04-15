@@ -58,9 +58,7 @@ Ext.define("SmartSolutions.view.solutions.YourSolutionsView", {
                     },
                     {
                         xtype: 'solutionsview',
-                        store: 'Solutions',
-                        width: 600,
-                        height: 600
+                        store: 'Solutions'
                     }
                 ]
             }

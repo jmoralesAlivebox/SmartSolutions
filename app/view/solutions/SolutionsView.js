@@ -18,6 +18,11 @@ Ext.define('SmartSolutions.view.solutions.SolutionsView', {
         '<span class="x-solution-view-paragraph">Description</span>',
         '<span class="x-solution-view-paragraph">{description}</span>',
         '<span class="x-solution-view-paragraph">{date}</span>',
+        '<tpl if="xindex!=xcount">',
+        '<br>',
+        '<br>',
+        '<hr>',
+        '</tpl>',
         '</div>',
         '</tpl>'
     ],
@@ -28,3 +33,4 @@ Ext.define('SmartSolutions.view.solutions.SolutionsView', {
     }
 
 });
+
