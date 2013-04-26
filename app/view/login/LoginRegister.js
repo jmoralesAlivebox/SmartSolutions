@@ -1,7 +1,7 @@
 Ext.define('SmartSolutions.view.login.LoginRegister', {
 
     extend:'Ext.container.Container',
-    xtype:'loginRegister',
+    xtype:'loginregister',
     alias: 'widget.loginRegister',
     cls: 'login-view',
 

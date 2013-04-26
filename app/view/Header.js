@@ -1,59 +1,59 @@
 Ext.define('SmartSolutions.view.Header', {
-    extend:'Ext.container.Container',
-    xtype:'smartsolutionsheader',
+    extend: 'Ext.container.Container',
+    xtype: 'smartsolutionsheader',
     layout: {
-        type: 'hbox'
+        type: 'column'
     },
     cls: 'main-header',
-    initComponent:function () {
+    initComponent: function () {
         this.items = [
-        {
-            xtype:'container',
-            cls: 'main-header-logo'
-        },
-        {
-            xtype: 'container',
-            cls: 'main-header-elements',
-            layout: {
-                type: 'hbox'
+            {
+                xtype: 'container',
+                cls: 'main-header-logo'
             },
-            items: [
-                {
-                    xtype: 'label',
-                    text: 'username'
+            {
+                xtype: 'container',
+                cls: 'main-header-elements',
+                layout: {
+                    type: 'column'
                 },
-                {
-                    xtype: 'image',
-                    cls: 'main-header-icons',
-                    src: 'resources/images/icons/Profile.png',
-                    listeners: {
-                        el: {
-                            scope: this,
-                            click: this.onUserProfile
+                items: [
+                    {
+                        xtype: 'container',
+                        html: 'username'
+                    },
+                    {
+                        xtype: 'image',
+                        cls: 'main-header-icons',
+                        src: 'resources/images/icons/Profile.png',
+                        listeners: {
+                            el: {
+                                scope: this,
+                                click: this.onUserProfile
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'image',
+                        cls: 'main-header-icons',
+                        src: 'resources/images/icons/logout.png',
+                        listeners: {
+                            el: {
+                                scope: this,
+                                click: this.onSignOut
+                            }
                         }
                     }
-                },
-                {
-                    xtype: 'image',
-                    cls: 'main-header-icons',
-                    src: 'resources/images/icons/logout.png',
-                    listeners: {
-                        el: {
-                            scope: this,
-                            click: this.onSignOut
-                        }
-                    }
-                }
-            ]
-        }
+                ]
+            }
         ];
         this.callParent(arguments);
     },
 
-    onSignOut: function(){
+    onSignOut: function () {
         this.fireEvent('signOut');
     },
-    onUserProfile: function(){
+    onUserProfile: function () {
         this.fireEvent('userProfile');
     }
 

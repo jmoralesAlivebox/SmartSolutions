@@ -9,25 +9,24 @@ Ext.define("SmartSolutions.view.solutions.YourSolutionsView", {
         this.items = [
             {
                 xtype: 'categorieslist',
-                cls: 'x-list-view'
+                cls: 'x-list-view',
+                width: 350
             },
             {
                 xtype: 'container',
-                width:'75%',
-                margin: {left: '25%'},
+                columnWidth: 1,
                 items: [
                     {
                         xtype: 'container',
                         cls: 'your-solutions-view-top',
                         layout: {
-                            type: 'hbox'
+                            type: 'column'
                         },
                         items: [
                             {
-                                xtype: 'label',
+                                xtype: 'container',
                                 cls: 'your-solutions-view-txt',
-                                text: 'Welcome to your Solutions!',
-                                width: '88%'
+                                html: 'Welcome to your Solutions!'
                             },
                             {
                                 xtype: 'button',
@@ -41,7 +40,8 @@ Ext.define("SmartSolutions.view.solutions.YourSolutionsView", {
                                 }
                             }
                         ]
-                    },
+                    }
+                    ,
                     {
                         xtype: 'container',
                         cls: 'your-solutions-view-container-search',
@@ -61,6 +61,10 @@ Ext.define("SmartSolutions.view.solutions.YourSolutionsView", {
                         store: 'Solutions'
                     }
                 ]
+            },
+            {
+                xtype: 'container',
+                width: 350
             }
         ];
         this.callParent(arguments);

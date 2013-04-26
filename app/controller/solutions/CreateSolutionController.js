@@ -16,7 +16,8 @@ Ext.define('SmartSolutions.controller.solutions.CreateSolutionController', {
 
     views: [
         'solutions.NewSolutionSave',
-        'solutions.NewSolutionView'
+        'solutions.NewSolutionView',
+        'solutions.CreateYourSolutionView'
     ],
 
     init: function(){

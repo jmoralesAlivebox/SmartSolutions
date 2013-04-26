@@ -6,7 +6,7 @@
         <attribute name="sassProjectPath"/>
         <sequential>
             <echo message="Compiling sass project: @{sassProjectPath}"/>
-            <exec executable="C:\Ruby200\bin\compass.bat">
+            <exec executable="compass.bat" searchPath="true" >
                 <arg value="compile"/>
                 <arg value="@{sassProjectPath}"/>
             </exec>

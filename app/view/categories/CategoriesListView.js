@@ -1,15 +1,13 @@
 Ext.define('SmartSolutions.view.categories.CategoriesListView', {
     extend:'Ext.container.Container',
     alias: 'widget.categorieslist',
-    layout: {
-        type: 'vbox'
-    },
+
     initComponent:function () {
         this.items = [
             {
                 xtype: 'container',
                 layout: {
-                    type: 'hbox'
+                    type: 'column'
                 },
                 items:[
                     {
@@ -18,8 +16,8 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
                         margin: {right: 10, top: 15}
                     },
                     {
-                        xtype: 'label',
-                        text: 'All Categories',
+                        xtype: 'container',
+                        html: 'All Categories',
                         cls: 'x-list-view-txt'
                     }
                 ]
@@ -28,6 +26,7 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
                 xtype: 'gridpanel',
                 itemId: 'gridCategories',
                 store: 'Categories',
+                width: 300,
                 columns: [
                     {
                         dataIndex: 'name'
@@ -51,7 +50,7 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
                 hidden: true,
                 margin: {top:10},
                 layout: {
-                    type: 'hbox'
+                    type: 'column'
                 },
                 items: [
                     {

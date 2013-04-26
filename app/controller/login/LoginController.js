@@ -4,6 +4,7 @@ Ext.define('SmartSolutions.controller.login.LoginController', {
 
     views: [
         'login.Login',
+        'login.LoginRegister',
         'categories.CategoriesView'
     ],
 
