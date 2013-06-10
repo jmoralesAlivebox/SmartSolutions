@@ -18,6 +18,7 @@ Ext.application({
 
     requires: [
         'SmartSolutions.defaults.Constants',
+        'SmartSolutions.defaults.WebServices',
         'SmartSolutions.view.solutions.SolutionsView'
     ],
 

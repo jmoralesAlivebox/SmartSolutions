@@ -1,34 +1,34 @@
 Ext.define('SmartSolutions.view.login.Login', {
 
     extend:'Ext.container.Container',
-    xtype:'login',
+    xtype:'loginform',
     alias: 'widget.login',
     cls: 'login-view-container',
 
     initComponent:function () {
         this.items = [
             {
-                xtype: 'textfield',
-                fieldCls: 'login-view-forms',
-                cls: 'login-view-field',
-                itemId: 'txtUsername',
-                emptyText: 'Username'
-            },
-            {
-                xtype: 'container',
+                xtype: 'formcontainer',
+                modelClassName: 'SmartSolutions.model.authentication.loginUser',
+                itemId:'loginformcontainer',
                 cls: 'login-view-elements',
-                layout: {
-                    type: 'hbox'
-                },
-
                 items: [
+                    {
+                        xtype: 'textfield',
+                        fieldCls: 'login-view-forms',
+                        cls: 'login-view-field',
+                        itemId: 'txtUsername',
+                        emptyText: 'Username',
+                        name:'email'
+                    },
                     {
                         xtype: 'textfield',
                         fieldCls: 'login-view-forms',
                         cls: 'login-view-short-field',
                         itemId: 'txtPassword',
                         emptyText: 'Password',
-                        inputType:'password'
+                        inputType:'password',
+                        name:'password'
                     },
                     {
                         xtype: 'button',
@@ -87,7 +87,7 @@ Ext.define('SmartSolutions.view.login.Login', {
     },
 
     onLogin: function(){
-        this.fireEvent('validateLogin');
+        this.fireEvent('login');
     },
 
     onForgot: function(){

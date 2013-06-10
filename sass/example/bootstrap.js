@@ -14,8 +14,8 @@ Ext.Loader.addClassPathMappings({
 Ext.ClassManager.addNameAlternateMappings({
   "SmartSolutions.view.solutions.NewSolutionView": [],
   "Framework.ux.UxDependencies": [],
-  "SmartSolutions.view.login.ForgotPassword": [],
   "SmartSolutions.model.ImageItem": [],
+  "SmartSolutions.view.login.ForgotPassword": [],
   "Ext.ux.grid.TransformGrid": [],
   "Ext.ux.ajax.DataSimlet": [],
   "SmartSolutions.view.login.Login": [],
@@ -24,6 +24,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.ux.event.Driver": [],
   "Ext.ux.ajax.XmlSimlet": [],
   "Ext.ux.DataView.DragSelector": [],
+  "Framework.ux.view.TreeViewsContainer": [],
   "Ext.ux.grid.menu.ListMenu": [],
   "Framework.util.MD5Util": [],
   "Framework.ux.container.TabContainer": [],
@@ -35,6 +36,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Framework.util.ObjectUtil": [],
   "Ext.ux.PreviewPlugin": [],
   "Framework.ux.data.RestProxy": [],
+  "Framework.ux.form.AutoCompleteBox": [],
   "Ext.ux.ajax.SimXhr": [],
   "Ext.ux.event.RecorderManager": [],
   "Ext.ux.ProgressBarPager": [],
@@ -75,6 +77,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Framework.core.LocalizationManager": [],
   "Ext.ux.GroupTabRenderer": [],
   "SmartSolutions.view.categories.SelectCategoryView": [],
+  "Framework.ux.view.TreeTabViewsContainer": [],
   "Ext.ux.FieldReplicator": [],
   "Ext.ux.grid.filter.ListFilter": [],
   "Framework.util.HotkeysUtil": [],
@@ -90,6 +93,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "SmartSolutions.controller.login.LoginController": [],
   "Ext.ux.GroupTabPanel": [],
   "Ext.ux.DataView.LabelEditor": [],
+  "Framework.ux.form.FormContainer": [],
   "Ext.ux.grid.filter.StringFilter": [],
   "Ext.ux.statusbar.ValidationStatus": [],
   "Framework.core.FrameworkEvents": [],
@@ -141,10 +145,10 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.newsolutionview"
   ],
   "Framework.ux.UxDependencies": [],
+  "SmartSolutions.model.ImageItem": [],
   "SmartSolutions.view.login.ForgotPassword": [
     "widget.forgotPassword"
   ],
-  "SmartSolutions.model.ImageItem": [],
   "Ext.ux.grid.TransformGrid": [],
   "Ext.ux.ajax.DataSimlet": [],
   "SmartSolutions.view.login.Login": [
@@ -159,6 +163,9 @@ Ext.ClassManager.addNameAliasMappings({
     "simlet.xml"
   ],
   "Ext.ux.DataView.DragSelector": [],
+  "Framework.ux.view.TreeViewsContainer": [
+    "widget.treeviewscontainer"
+  ],
   "Ext.ux.grid.menu.ListMenu": [],
   "Framework.util.MD5Util": [],
   "Framework.ux.container.TabContainer": [
@@ -178,6 +185,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Framework.ux.data.RestProxy": [
     "proxy.restproxy"
+  ],
+  "Framework.ux.form.AutoCompleteBox": [
+    "widget.autocompletebox"
   ],
   "Ext.ux.ajax.SimXhr": [],
   "Ext.ux.event.RecorderManager": [
@@ -258,6 +268,9 @@ Ext.ClassManager.addNameAliasMappings({
   "SmartSolutions.view.categories.SelectCategoryView": [
     "widget.selectcategoryview"
   ],
+  "Framework.ux.view.TreeTabViewsContainer": [
+    "widget.treetabviewscontainer"
+  ],
   "Ext.ux.FieldReplicator": [],
   "Ext.ux.grid.filter.ListFilter": [
     "gridfilter.list"
@@ -281,6 +294,9 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.grouptabpanel"
   ],
   "Ext.ux.DataView.LabelEditor": [],
+  "Framework.ux.form.FormContainer": [
+    "widget.formcontainer"
+  ],
   "Ext.ux.grid.filter.StringFilter": [
     "gridfilter.string"
   ],
