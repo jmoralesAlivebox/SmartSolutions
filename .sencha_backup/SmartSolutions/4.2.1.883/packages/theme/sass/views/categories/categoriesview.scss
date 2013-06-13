@@ -1,0 +1,46 @@
+@import '../main/defaults.scss';
+
+.x-image-view {
+  width: 45%;
+  margin-left: 28%;
+  margin-top: 40px;
+}
+
+.x-image-view .thumb {
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 2px;
+}
+
+.x-image-view .thumb-wrap {
+  float: left;
+  background-color: $buttonbackgroundcolor;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 30px;
+  border-color: $buttonbackgroundcolor;
+  border-width: 5px;
+  border-style: solid;
+  border-radius: 15px;
+  width: 250px;
+  min-height: 100px;
+  margin-right: 30px;
+  margin-top: 30px;
+}
+
+.x-image-view .thumb-wrap span {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  color: $whitetextcolor;
+  font-size: 18px;
+}
+
+.x-image-view .x-item-selected .thumb {
+  background: $headerbackgroundcolor !important;
+}
+
+.x-image-view .x-item-over .thumb {
+  background: $headerbackgroundcolor;
+}
+

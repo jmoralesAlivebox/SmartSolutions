@@ -1,0 +1,10 @@
+Ext.define('SmartSolutions.defaults.Constants',{
+
+    statics: {
+        SMARTSOLUTIONS_OPTION_TYPE_CATEGORY: "CATEGORY",
+        IMAGE_VIEW_SELECTION_MODE_SINGLE: "SINGLE",
+        IMAGE_VIEW_SELECTION_MODE_SIMPLE: "SIMPLE",
+        IMAGE_VIEW_SELECTION_MODE_MULTIPLE: "MULTI"
+    }
+
+});

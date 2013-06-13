@@ -1,0 +1,94 @@
+@import '../main/defaults.scss';
+
+.login-view {
+  background-color: $localbackgroundcolor;
+  width: 330px;
+  align: 'center';
+  margin-top: 10%;
+  margin-left: 42%;
+  background-image: url(../images/icons/Login_skin.png);
+  height: 428px;
+}
+
+.login-view-txt {
+  color: $txtfontcolor;
+  text-decoration: none
+}
+
+.login-view-titles {
+  color: $titlescolor;
+  font-size: 16px;
+}
+
+.login-view-forms {
+  color: $formsfontcolor;
+  background-image: none;
+  background-color: $formsbackgroundcolor;
+  border-radius: 4px;
+}
+
+.login-view-field{
+  width: 84%;
+}
+
+.login-view-field .x-form-item-body input{
+  height: 30px;
+}
+
+.login-view-short-field{
+  width: 0.9%
+}
+
+.login-view-short-field .x-form-item-body input{
+  height: 30px;
+}
+
+.login-view-buttons{
+  border-radius: 4px;
+  margin-left: 10px;
+  height: 30px;
+  width: 55px;
+  background: $buttonbackgroundcolor;
+  color: white;
+}
+
+.login-view-buttons .x-btn-center span {
+  color: $whitetextcolor;
+  font-weight:900;
+  font-size: 12px;
+}
+
+.login-view-container{
+  margin-left: 12%;
+  margin-top: 140px;
+  margin-bottom: 10px;
+}
+
+.login-view-elements{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.login-view-checkbox{
+  border-radius: 5px;
+  margin-top: -3px;
+  margin-right: 5px;
+}
+
+.login-line-container{
+  width: 75%;
+  margin-left: 12%;
+}
+
+.register-view-container{
+  margin-left: 12%;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+.register-view-txt {
+  color: $txtfontcolor;
+  text-decoration: none;
+  font-size: 16px;
+}
+

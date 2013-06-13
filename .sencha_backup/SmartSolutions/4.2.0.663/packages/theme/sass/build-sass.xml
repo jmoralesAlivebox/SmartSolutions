@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="sassBuild" default="main">
+
+    <macrodef name="compass">
+        <attribute name="sassProjectPath"/>
+        <sequential>
+            <echo message="Compiling sass project: @{sassProjectPath}"/>
+            <exec executable="compass.bat" searchPath="true" >
+                <arg value="compile"/>
+                <arg value="@{sassProjectPath}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <target name="compile" >
+
+        <compass sassProjectPath="." />
+
+    </target>
+
+    <target name="removeUnusedCssFiles" >
+        <delete includeemptydirs="true" >
+            <fileset dir="../../../resources/theme" includes="**/*" >
+                <exclude name="app.css" />
+                <exclude name="**/images/**" />
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="main" depends="compile,removeUnusedCssFiles"/>
+
+</project>

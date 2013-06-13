@@ -1,0 +1,39 @@
+{
+
+    "localizationManagement": {
+        "enabled": false
+    },
+
+    "errorsManagement": {
+        "enabled": false
+    },
+
+    "viewsManagement": {
+
+        "enabled": true,
+        "headerPackage": "SmartSolutions.view.Header",
+        "viewsContainerPackage": "Framework.ux.view.SimpleViewsContainer",
+        "views": [
+            {
+                "name": "loginRegister",
+                "package": "SmartSolutions.view.login.LoginRegister",
+                "hideHeader": true,
+                "default": true
+            },
+            {
+                "name": "categoriesView",
+                "package": "SmartSolutions.view.categories.SelectCategoryView"
+            },
+            {
+                "name": "newSolutionView",
+                "package": "SmartSolutions.view.solutions.CreateYourSolutionView"
+            },
+            {
+                "name": "yourSolutionsView",
+                "package": "SmartSolutions.view.solutions.YourSolutionsView"
+            }
+        ]
+
+    }
+
+}

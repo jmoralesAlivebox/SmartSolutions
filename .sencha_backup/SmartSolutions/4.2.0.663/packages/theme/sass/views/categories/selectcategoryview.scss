@@ -1,0 +1,27 @@
+@import '../main/defaults.scss';
+
+.selectcategory-view {
+  background-color: $whitetextcolor;
+  width: 100%;
+}
+
+.select-category-button-container {
+  background-color: $localbackgroundcolor;
+  width: 100%;
+  min-height: 1200px;
+}
+
+.select-category-view-button {
+  border-radius: 4px;
+  margin-left: 10px;
+  margin-top: 60px;
+  height: 40px;
+  width: 140px;
+  background: $buttonbackgroundcolor;
+}
+
+.select-category-view-button .x-btn-center span {
+  color: $whitetextcolor;
+  font-weight:900;
+  font-size: 12px;
+}
