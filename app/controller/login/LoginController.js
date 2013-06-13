@@ -32,7 +32,6 @@ Ext.define('SmartSolutions.controller.login.LoginController', {
         var tmpLogin = this.getLoginform();
         if( tmpLogin.isValid() ){
             var tmpUser = tmpLogin.getRecord();
-            //set MD5 password
             tmpUser.save({
                 scope: this,
                 success: this.onSuccessLogin,

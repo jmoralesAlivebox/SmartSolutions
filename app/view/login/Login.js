@@ -19,7 +19,7 @@ Ext.define('SmartSolutions.view.login.Login', {
                         cls: 'login-view-field',
                         itemId: 'txtUsername',
                         emptyText: 'Username',
-                        name:'user_email'
+                        name:'email'
                     },
                     {
                         xtype: 'textfield',
@@ -28,7 +28,7 @@ Ext.define('SmartSolutions.view.login.Login', {
                         itemId: 'txtPassword',
                         emptyText: 'Password',
                         inputType:'password',
-                        name:'user_password'
+                        name:'password'
                     },
                     {
                         xtype: 'button',

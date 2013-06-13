@@ -1,19 +1,17 @@
 Ext.define('SmartSolutions.view.login.Register', {
 
     extend:'Ext.container.Container',
-    xtype:'register',
+    xtype:'registerform',
     alias: 'widget.register',
     cls: 'register-view-container',
 
     initComponent:function () {
         this.items = [
             {
-                xtype: 'container',
+                xtype: 'formcontainer',
+                itemId:'registerformcontainer',
+                modelClassName: 'SmartSolutions.model.authentication.loginUser',
                 cls: 'login-view-elements',
-                layout: {
-                    type: 'hbox'
-                },
-
                 items: [
                     {
                         xtype: 'label',
@@ -35,28 +33,31 @@ Ext.define('SmartSolutions.view.login.Register', {
                                 c.getEl().on('click', this.onRegister, this, {stopEvent: true});
                             }
                         }
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldCls: 'login-view-forms',
+                        cls: 'login-view-field',
+                        itemId: 'txtEmail',
+                        emptyText: 'Email',
+                        name:'email'
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldCls: 'login-view-forms',
+                        cls: 'login-view-field',
+                        itemId: 'txtPassword',
+                        emptyText: 'Password',
+                        inputType:'password',
+                        name:'password'
                     }]
-            },
-            {
-                xtype: 'textfield',
-                fieldCls: 'login-view-forms',
-                cls: 'login-view-field',
-                itemId: 'txtEmail',
-                emptyText: 'Email'
-            },
-            {
-                xtype: 'textfield',
-                fieldCls: 'login-view-forms',
-                cls: 'login-view-field',
-                itemId: 'txtPassword',
-                emptyText: 'Password'
             }
         ];
         this.callParent(arguments);
     },
 
     onRegister: function(){
-        this.fireEvent('createUser');
+        this.fireEvent('signup');
     }
 
 });

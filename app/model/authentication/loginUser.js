@@ -10,11 +10,11 @@ Ext.define('SmartSolutions.model.authentication.loginUser',{
             type:'int'
         },
         {
-            name:'user_email',
+            name:'email',
             type:'string'
         },
         {
-            name:'user_password',
+            name:'password',
             type:'string'
         }
     ],
