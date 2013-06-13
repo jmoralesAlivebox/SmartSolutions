@@ -41,7 +41,7 @@ Ext.define('SmartSolutions.controller.login.LoginController', {
     },
 
     onSuccessLogin: function(argRecord){
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
+        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
     },
 
     forgotPassword: function(){

@@ -5,15 +5,18 @@ Copyright (c) 2011-2013 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
+Build date: 2013-05-16 14:36:50 (f9be68accb407158ba2b1be2c226a6ce1f649314)
 */
 /**
  * Pedoman translasi:
@@ -73,7 +76,7 @@ Ext.onReady(function() {
         };
     }
 
-    if (exists('Ext.util.Format')) {
+    if (Ext.util && Ext.util.Format) {
         Ext.apply(Ext.util.Format, {
             thousandSeparator: '.',
             decimalSeparator: ',',
@@ -83,14 +86,6 @@ Ext.onReady(function() {
         });
     }
     
-    if (exists('Ext.form.field.VTypes')) {
-        Ext.apply(Ext.form.field.VTypes, {
-            emailText: 'Field ini harus dalam format email seperti "user@example.com"',
-            urlText: 'Field ini harus dalam format URL seperti "http:/' + '/www.example.com"',
-            alphaText: 'Field ini harus terdiri dari huruf dan _',
-            alphanumText: 'Field ini haris terdiri dari huruf, angka dan _'
-        });
-    }
 });
 
 Ext.define("Ext.locale.id.view.View", {
@@ -103,8 +98,8 @@ Ext.define("Ext.locale.id.grid.plugin.DragDrop", {
     dragText: "{0} baris terpilih"
 });
 
-Ext.define("Ext.locale.id.TabPanelItem", {
-    override: "Ext.TabPanelItem",
+Ext.define("Ext.locale.id.tab.Tab", {
+    override: "Ext.tab.Tab",
     closeText: "Tutup tab ini"
 });
 
@@ -116,7 +111,7 @@ Ext.define("Ext.locale.id.form.field.Base", {
 // changing the msg text below will affect the LoadMask
 Ext.define("Ext.locale.id.view.AbstractView", {
     override: "Ext.view.AbstractView",
-    msg: "Pemuatan..."
+    loadingText: "Pemuatan..."
 });
 
 Ext.define("Ext.locale.id.picker.Date", {
@@ -126,8 +121,6 @@ Ext.define("Ext.locale.id.picker.Date", {
     maxText: "Tanggal ini setelah batas tanggal maksimal",
     disabledDaysText: "",
     disabledDatesText: "",
-    monthNames: Ext.Date.monthNames,
-    dayNames: Ext.Date.dayNames,
     nextText: 'Bulan Berikut (Kontrol+Kanan)',
     prevText: 'Bulan Sebelum (Kontrol+Kiri)',
     monthYearText: 'Pilih bulan (Kontrol+Atas/Bawah untuk pindah tahun)',
@@ -190,6 +183,14 @@ Ext.define("Ext.locale.id.form.field.ComboBox", {
     Ext.apply(Ext.form.field.ComboBox.prototype.defaultListConfig, {
         loadingText: "Pemuatan..."
     });
+});
+
+Ext.define("Ext.locale.id.form.field.VTypes", {
+    override: "Ext.form.field.VTypes",
+    emailText: 'Field ini harus dalam format email seperti "user@example.com"',
+    urlText: 'Field ini harus dalam format URL seperti "http:/' + '/www.example.com"',
+    alphaText: 'Field ini harus terdiri dari huruf dan _',
+    alphanumText: 'Field ini haris terdiri dari huruf, angka dan _'
 });
 
 Ext.define("Ext.locale.id.form.field.HtmlEditor", {
@@ -293,6 +294,16 @@ Ext.define("Ext.locale.id.grid.PropertyColumnModel", {
     nameText: "Nama",
     valueText: "Nilai",
     dateFormat: "d/m/Y"
+});
+
+Ext.define("Ext.locale.id.window.MessageBox", {
+    override: "Ext.window.MessageBox",
+    buttonText: {
+        ok: "OK",
+        cancel: "Batal",
+        yes: "Ya",
+        no: "Tidak"
+    }    
 });
 
 // This is needed until we can refactor all of the locales into individual files

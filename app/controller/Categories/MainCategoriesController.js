@@ -45,7 +45,7 @@ Ext.define('SmartSolutions.controller.categories.MainCategoriesController', {
     },
 
     openNewSolutionView: function(){
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'newSolutionView');
+        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'newSolutionView');
     },
 
     showAddContainer: function(){

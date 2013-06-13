@@ -15,6 +15,6 @@ Ext.define('SmartSolutions.controller.solutions.YourSolutionsController', {
     },
 
     openNewSolutionView: function(){
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'newSolutionView');
+        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'newSolutionView');
     }
 });

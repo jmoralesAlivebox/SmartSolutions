@@ -46,11 +46,11 @@ Ext.define('SmartSolutions.controller.solutions.CreateSolutionController', {
             date: tmpDate.getDate()+'/'+tmpMonth+'/'+tmpDate.getFullYear()
         });
         tmpSolutionsStore.add(tmpSolution);
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
+        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
     },
 
     returnToSolutions: function(){
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
+        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
     },
 
     addImage: function(){

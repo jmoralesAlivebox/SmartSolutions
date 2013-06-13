@@ -34,7 +34,7 @@ Ext.define('SmartSolutions.controller.login.RegisterController', {
     },
 
     onSuccessSignup: function(argRecord){
-        Framework.core.EventBus.fireEvent(Framework.core.FrameworkEvents.EVENT_SHOW_PAGE, 'categoriesView');
+        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'categoriesView');
     }
 
 });

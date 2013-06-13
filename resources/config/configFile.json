@@ -12,7 +12,7 @@
 
         "enabled": true,
         "headerPackage": "SmartSolutions.view.Header",
-        "viewsContainerPackage": "Framework.ux.view.SimpleViewsContainer",
+        "viewsContainerPackage": "Mercury.ux.view.SimpleViewsContainer",
         "views": [
             {
                 "name": "loginRegister",

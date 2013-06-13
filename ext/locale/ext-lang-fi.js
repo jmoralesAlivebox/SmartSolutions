@@ -5,15 +5,18 @@ Copyright (c) 2011-2013 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
+Build date: 2013-05-16 14:36:50 (f9be68accb407158ba2b1be2c226a6ce1f649314)
 */
 /**
  * Finnish Translations
@@ -21,12 +24,6 @@ Build date: 2013-03-11 22:33:40 (aed16176e68b5e8aa1433452b12805c0ad913836)
  * 'ä' should read as lowercase 'a' with two dots on top (&auml;)
  */
 Ext.onReady(function() {
-    var cm = Ext.ClassManager,
-        exists = Ext.Function.bind(cm.get, cm);
-
-    if (Ext.Updater) {
-        Ext.Updater.defaults.indicatorText = '<div class="loading-indicator">Ladataan...</div>';
-    }
 
     if (Ext.Date) {
         Ext.Date.monthNames = ["tammikuu", "helmikuu", "maaliskuu", "huhtikuu", "toukokuu", "kesäkuu", "heinäkuu", "elokuu", "syyskuu", "lokakuu", "marraskuu", "joulukuu"];
@@ -66,16 +63,7 @@ Ext.onReady(function() {
         };
     }
 
-    if (Ext.MessageBox) {
-        Ext.MessageBox.buttonText = {
-            ok: "OK",
-            cancel: "Peruuta",
-            yes: "Kyllä",
-            no: "Ei"
-        };
-    }
-
-    if (exists('Ext.util.Format')) {
+    if (Ext.util && Ext.util.Format) {
         Ext.apply(Ext.util.Format, {
             thousandSeparator: '.',
             decimalSeparator: ',',
@@ -83,22 +71,13 @@ Ext.onReady(function() {
             // Finnish Euro
             dateFormat: 'j.n.Y'
         });
-    }
-    if (exists('Ext.util.Format')) {
+        
         Ext.util.Format.date = function(v, format) {
             if (!v) return "";
             if (!(v instanceof Date)) v = new Date(Date.parse(v));
             return Ext.Date.format(v, format || "j.n.Y");
         };
-    }
-
-    if (exists('Ext.form.field.VTypes')) {
-        Ext.apply(Ext.form.field.VTypes, {
-            emailText: 'Syötä tähän kenttään sähköpostiosoite, esim. "etunimi.sukunimi@osoite.fi"',
-            urlText: 'Syötä tähän kenttään URL-osoite, esim. "http:/' + '/www.osoite.fi"',
-            alphaText: 'Syötä tähän kenttään vain kirjaimia (a-z, A-Z) ja alaviivoja (_)',
-            alphanumText: 'Syötä tähän kenttään vain kirjaimia (a-z, A-Z), numeroita (0-9) ja alaviivoja (_)'
-        });
+        
     }
 });
 
@@ -112,15 +91,15 @@ Ext.define("Ext.locale.fi.grid.plugin.DragDrop", {
     dragText: "{0} rivi(ä) valittu"
 });
 
-Ext.define("Ext.locale.fi.TabPanelItem", {
-    override: "Ext.TabPanelItem",
+Ext.define("Ext.locale.fi.tab.Tab", {
+    override: "Ext.tab.Tab",
     closeText: "Sulje tämä välilehti"
 });
 
 // changing the msg text below will affect the LoadMask
 Ext.define("Ext.locale.fi.view.AbstractView", {
     override: "Ext.view.AbstractView",
-    msg: "Ladataan..."
+    loadingText: "Ladataan..."
 });
 
 Ext.define("Ext.locale.fi.picker.Date", {
@@ -130,8 +109,6 @@ Ext.define("Ext.locale.fi.picker.Date", {
     maxText: "Tämä päivämäärä on myöhäisempi kuin viimeinen sallittu",
     disabledDaysText: "",
     disabledDatesText: "",
-    monthNames: Ext.Date.monthNames,
-    dayNames: Ext.Date.dayNames,
     nextText: 'Seuraava kuukausi (Control+oikealle)',
     prevText: 'Edellinen kuukausi (Control+vasemmalle)',
     monthYearText: 'Valitse kuukausi (vaihda vuotta painamalla Control+ylös/alas)',
@@ -198,6 +175,14 @@ Ext.define("Ext.locale.fi.form.field.ComboBox", {
     Ext.apply(Ext.form.field.ComboBox.prototype.defaultListConfig, {
         loadingText: "Ladataan..."
     });
+});
+
+Ext.define("Ext.locale.fi.form.field.VTypes", {
+    override: "Ext.form.field.VTypes",
+    emailText: 'Syötä tähän kenttään sähköpostiosoite, esim. "etunimi.sukunimi@osoite.fi"',
+    urlText: 'Syötä tähän kenttään URL-osoite, esim. "http:/' + '/www.osoite.fi"',
+    alphaText: 'Syötä tähän kenttään vain kirjaimia (a-z, A-Z) ja alaviivoja (_)',
+    alphanumText: 'Syötä tähän kenttään vain kirjaimia (a-z, A-Z), numeroita (0-9) ja alaviivoja (_)'
 });
 
 Ext.define("Ext.locale.fi.form.field.HtmlEditor", {
@@ -306,6 +291,16 @@ Ext.define("Ext.locale.fi.grid.PropertyColumnModel", {
     nameText: "Nimi",
     valueText: "Arvo",
     dateFormat: "j.m.Y"
+});
+
+Ext.define("Ext.locale.fi.window.MessageBox", {
+    override: "Ext.window.MessageBox",
+    buttonText: {
+        ok: "OK",
+        cancel: "Peruuta",
+        yes: "Kyllä",
+        no: "Ei"
+    }    
 });
 
 // This is needed until we can refactor all of the locales into individual files
