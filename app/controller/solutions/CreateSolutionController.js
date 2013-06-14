@@ -46,11 +46,11 @@ Ext.define('SmartSolutions.controller.solutions.CreateSolutionController', {
             date: tmpDate.getDate()+'/'+tmpMonth+'/'+tmpDate.getFullYear()
         });
         tmpSolutionsStore.add(tmpSolution);
-        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
+        Mercury.core.ViewsManager.showPage('yourSolutionsView');
     },
 
     returnToSolutions: function(){
-        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
+        Mercury.core.ViewsManager.showPage('yourSolutionsView');
     },
 
     addImage: function(){
