@@ -41,7 +41,10 @@ Ext.define('SmartSolutions.controller.login.LoginController', {
     },
 
     onSuccessLogin: function(argRecord){
-        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'yourSolutionsView');
+        var tmpCurrentUser = argRecord;
+        // add the permission to the second argument
+        Mercury.core.SecurityManager.logInUser(tmpCurrentUser.get('email'),[]);
+        Mercury.core.ViewsManager.reconfigureViewsAndShowPage('yourSolutionsView');
     },
 
     forgotPassword: function(){

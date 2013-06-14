@@ -34,7 +34,10 @@ Ext.define('SmartSolutions.controller.login.RegisterController', {
     },
 
     onSuccessSignup: function(argRecord){
-        Mercury.core.EventBus.fireEvent(Mercury.core.FrameworkEvents.EVENT_SHOW_PAGE, 'categoriesView');
+        var tmpCurrentUser = argRecord;
+        // add the permission to the second argument
+        Mercury.core.SecurityManager.logInUser(tmpCurrentUser.get('email'),[]);
+        Mercury.core.ViewsManager.reconfigureViewsAndShowPage('categoriesView');
     }
 
 });
