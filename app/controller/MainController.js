@@ -15,6 +15,16 @@ Ext.define('SmartSolutions.controller.MainController', {
     },
 
     signOut: function(){
+        Ext.Ajax.request({
+            method: 'GET',
+            url: SmartSolutions.defaults.WebServices.USER_SIGN_OUT,
+            success: this.onSignOutSuccess
+        })
+
+    },
+
+    onSignOutSuccess: function(){
         Mercury.core.ViewsManager.reconfigureViewsAndShowPage('loginRegister');
     }
+
 });

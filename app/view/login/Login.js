@@ -28,7 +28,11 @@ Ext.define('SmartSolutions.view.login.Login', {
                         itemId: 'txtPassword',
                         emptyText: 'Password',
                         inputType:'password',
-                        name:'password'
+                        name:'password',
+                        listeners:{
+                            scope:this,
+                            specialkey:this.onLoginEnter
+                        }
                     },
                     {
                         xtype: 'button',
@@ -86,6 +90,9 @@ Ext.define('SmartSolutions.view.login.Login', {
         this.callParent(arguments);
     },
 
+    onLoginEnter: function(){
+        this.fireEvent('login');
+    },
     onLogin: function(){
         this.fireEvent('login');
     },

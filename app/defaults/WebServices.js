@@ -3,6 +3,7 @@ Ext.define('SmartSolutions.defaults.WebServices',{
     statics: {
         WEB_SERVICES_SERVER: '/ws/ssws/',
         USER_AUTHENTICATION: '/ws/ssws/login/',
-        USER_REGISTER: '/ws/ssws/register/'
+        USER_REGISTER: '/ws/ssws/register/',
+        USER_SIGN_OUT: '/ws/ssws/signout/'
     }
 });
