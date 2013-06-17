@@ -24,6 +24,7 @@ Ext.define('SmartSolutions.controller.MainController', {
     },
 
     onSignOutSuccess: function(){
+        Mercury.core.SecurityManager.logOutUser();
         Mercury.core.ViewsManager.reconfigureViewsAndShowPage('loginRegister');
     }
 
