@@ -25,6 +25,7 @@ Ext.define('SmartSolutions.controller.categories.MainCategoriesController', {
     stores:[
         'CategoryItems',
         'Categories',
+        'TreeCategories',
         'Solutions'
     ],
 

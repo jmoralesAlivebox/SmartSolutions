@@ -1,4 +1,4 @@
-Ext.define('SmartSolutions.view.components.TreeCategory', {
+Ext.define('SmartSolutions.view.components.TreeCategoryView', {
     extend: 'Ext.tree.Panel',
 
     alias: 'widget.treecategory',
@@ -12,27 +12,12 @@ Ext.define('SmartSolutions.view.components.TreeCategory', {
 
     height: 400,
     width: 350,
-    title: 'Files',
+    title: 'Categories',
     useArrows: true,
 
     initComponent: function() {
         Ext.apply(this, {
-            store: new Ext.data.TreeStore({
-                proxy: {
-                    type: 'ajax',
-                    url: 'resources/data/categories.json'
-                },
-                root: {
-                    text: 'Ext JS',
-                    id: 'src',
-                    expanded: true
-                },
-                folderSort: true,
-                sorters: [{
-                    property: 'text',
-                    direction: 'ASC'
-                }]
-            }),
+            store: 'TreeCategories',
             viewConfig: {
                 plugins: {
                     ptype: 'treeviewdragdrop',
