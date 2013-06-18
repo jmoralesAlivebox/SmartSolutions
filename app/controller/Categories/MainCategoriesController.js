@@ -15,7 +15,8 @@ Ext.define('SmartSolutions.controller.categories.MainCategoriesController', {
 
     views: [
         'categories.SelectCategoryView',
-        'categories.CategoriesListView'
+        'categories.CategoriesListView',
+        'components.TreeCategoryView'
     ],
     models:[
         'ImageItem',

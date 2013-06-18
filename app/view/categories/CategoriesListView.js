@@ -23,15 +23,8 @@ Ext.define('SmartSolutions.view.categories.CategoriesListView', {
                 ]
             },
             {
-                xtype: 'gridpanel',
-                itemId: 'gridCategories',
-                store: 'Categories',
-                width: 300,
-                columns: [
-                    {
-                        dataIndex: 'name'
-                    }
-                ]
+                xtype: 'treecategory',
+                itemId: 'treeCategories'
             },
             {
                 xtype: 'button',
